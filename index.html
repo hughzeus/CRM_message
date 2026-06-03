@@ -6,19 +6,23 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="판매왕문자">
-    <meta name="application-name" content="판매왕문자">
-    <meta name="theme-color" content="#003499">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/256/car.png">
-    <link rel="icon" href="https://img.icons8.com/fluency/256/car.png" type="image/png">
-    <title>자동차 판매왕 문자 생성기 v5.3 — 사용자 템플릿 관리</title>
+    <meta name="apple-mobile-web-app-title" content="판매왕문자" id="metaAppleTitle">
+    <meta name="application-name" content="판매왕문자" id="metaAppName">
+    <meta name="theme-color" content="#003499" id="metaThemeColor">
+    <!-- V5.4 P1-8 PWA: 별도 manifest.json (HTTPS 호스팅 시) + 인라인 fallback (file:// 호환은 JS에서 동적 주입) -->
+    <link rel="manifest" id="appManifest" href="manifest.json">
+    <link rel="apple-touch-icon" id="appleTouchIcon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><rect width='256' height='256' rx='48' fill='%23003499'/><text x='50%25' y='58%25' font-size='150' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='800'>판</text></svg>">
+    <link rel="icon" id="favIcon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><rect width='256' height='256' rx='48' fill='%23003499'/><text x='50%25' y='58%25' font-size='150' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='800'>판</text></svg>" type="image/svg+xml">
+    <title>자동차 판매왕 문자 생성기 v5.4 — 화이트라벨</title>
 
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 
     <style>
         :root {
-            --ford-blue: #003499;
-            --ford-deep: #002673;
+            /* V5.4 화이트라벨: --brand-primary/--brand-deep는 설정 패널에서 사용자가 변경 가능.
+               기본값은 중성 다크 블루. 회사 컬러로 자유롭게 교체. */
+            --brand-primary: #003499;
+            --brand-deep: #002673;
             --light-blue: #F0F4FA;
             --label-gray: #718096;
             --text-dark: #212529;
@@ -46,7 +50,7 @@
         }
         h2 {
             text-align: center;
-            color: var(--ford-deep);
+            color: var(--brand-deep);
             margin: 0 0 8px;
             font-size: 22px;
             font-weight: 800;
@@ -59,7 +63,7 @@
         }
         .crm-panel {
             background: linear-gradient(135deg, var(--light-blue), #fff);
-            border: 1px solid var(--ford-blue);
+            border: 1px solid var(--brand-primary);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 18px;
@@ -72,7 +76,7 @@
         }
         .crm-header .crm-title {
             font-weight: 700;
-            color: var(--ford-blue);
+            color: var(--brand-primary);
             font-size: 14px;
         }
         .crm-status {
@@ -87,7 +91,7 @@
         .btn-load {
             flex: 1;
             padding: 10px;
-            background: var(--ford-blue);
+            background: var(--brand-primary);
             color: white;
             border: none;
             border-radius: 6px;
@@ -95,7 +99,7 @@
             font-size: 13px;
             cursor: pointer;
         }
-        .btn-load:hover { background: var(--ford-deep); }
+        .btn-load:hover { background: var(--brand-deep); }
         .btn-clear {
             padding: 10px 14px;
             background: #fff;
@@ -149,15 +153,32 @@
             margin-left: 6px;
             font-weight: 600;
         }
-        .badge-ford { background: #003499; color: white; }
-        .badge-lincoln { background: #6B5B95; color: white; }
-        .badge-out { background: #1e7d34; color: white; }
-        .badge-potential { background: #f0ad4e; color: white; }
+        /* 브랜드별 컬러 배지 (V5.4: 국산·수입 14종 인식) */
+        .badge-ford     { background: #003499; color: white; }
+        .badge-lincoln  { background: #6B5B95; color: white; }
+        .badge-hyundai  { background: #002C5F; color: white; }
+        .badge-kia      { background: #05141F; color: white; }
+        .badge-genesis  { background: #1F1F1F; color: #C9A961; }
+        .badge-renault  { background: #FFCC33; color: #000; }
+        .badge-kg       { background: #BE0027; color: white; }
+        .badge-chevy    { background: #C5A572; color: #1F1F1F; }
+        .badge-bmw      { background: #1C69D4; color: white; }
+        .badge-benz     { background: #000; color: white; }
+        .badge-audi     { background: #BB0A30; color: white; }
+        .badge-porsche  { background: #B12029; color: white; }
+        .badge-volvo    { background: #1A3668; color: white; }
+        .badge-zeekr    { background: #00C2A8; color: white; }
+        .badge-tesla    { background: #CC0000; color: white; }
+        .badge-lexus    { background: #58595B; color: white; }
+        .badge-toyota   { background: #EB0A1E; color: white; }
+        .badge-generic  { background: #555; color: white; }
+        .badge-out      { background: #1e7d34; color: white; }
+        .badge-potential{ background: #f0ad4e; color: white; }
 
         .selected-card {
             display: none;
             background: #fff;
-            border: 1px solid var(--ford-blue);
+            border: 1px solid var(--brand-primary);
             border-radius: 8px;
             padding: 10px 12px;
             margin-top: 10px;
@@ -166,7 +187,7 @@
         .selected-card.active { display: block; }
         .selected-card .sc-name {
             font-weight: 700;
-            color: var(--ford-deep);
+            color: var(--brand-deep);
             font-size: 14px;
             display: flex;
             justify-content: space-between;
@@ -211,7 +232,7 @@
         }
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: var(--ford-blue);
+            border-color: var(--brand-primary);
             background-color: #fff;
         }
         textarea {
@@ -233,7 +254,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         .btn-generate {
-            background-color: var(--ford-deep);
+            background-color: var(--brand-deep);
             color: white;
             margin-top: 15px;
         }
@@ -302,13 +323,13 @@
             font-size: 11px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
-            color: var(--ford-blue);
+            color: var(--brand-primary);
             transition: 0.15s;
         }
         .var-chip:hover {
-            background: var(--ford-blue);
+            background: var(--brand-primary);
             color: white;
-            border-color: var(--ford-blue);
+            border-color: var(--brand-primary);
         }
         .var-chip.has-data {
             border-color: var(--ok);
@@ -365,8 +386,8 @@
         }
         .tpl-actions button.tpl-edit { background: #fffbf0; border-color: #f0d68a; color: #8a6a00; }
         .tpl-actions button.tpl-edit:hover { background: #fdf4d8; }
-        .tpl-actions button.tpl-restore { background: #f0f4fa; border-color: var(--ford-blue); color: var(--ford-blue); }
-        .tpl-actions button.tpl-restore:hover { background: var(--ford-blue); color: white; }
+        .tpl-actions button.tpl-restore { background: #f0f4fa; border-color: var(--brand-primary); color: var(--brand-primary); }
+        .tpl-actions button.tpl-restore:hover { background: var(--brand-primary); color: white; }
         .tpl-actions button.tpl-add { background: #e6f4ea; border-color: var(--ok); color: var(--ok); }
         .tpl-actions button.tpl-add:hover { background: var(--ok); color: white; }
         .tpl-actions button.tpl-manage { background: #f0e6f7; border-color: #6B5B95; color: #6B5B95; }
@@ -396,7 +417,7 @@
         }
         .modal h3 {
             margin: 0 0 15px;
-            color: var(--ford-deep);
+            color: var(--brand-deep);
             font-size: 18px;
         }
         .modal label {
@@ -445,8 +466,8 @@
             font-size: 14px;
             cursor: pointer;
         }
-        .modal .btn-save { background: var(--ford-blue); color: white; }
-        .modal .btn-save:hover { background: var(--ford-deep); }
+        .modal .btn-save { background: var(--brand-primary); color: white; }
+        .modal .btn-save:hover { background: var(--brand-deep); }
         .modal .btn-cancel { background: #f0f0f0; color: var(--text-dark); }
         .modal .btn-cancel:hover { background: #e0e0e0; }
 
@@ -462,7 +483,7 @@
         .manage-panel.open { display: block; }
         .manage-panel h4 {
             margin: 0 0 10px;
-            color: var(--ford-deep);
+            color: var(--brand-deep);
             font-size: 14px;
         }
         .manage-section { margin-bottom: 14px; }
@@ -518,7 +539,7 @@
             background: white;
             cursor: pointer;
         }
-        .backup-row .btn-export { background: var(--ford-blue); color: white; border-color: var(--ford-blue); }
+        .backup-row .btn-export { background: var(--brand-primary); color: white; border-color: var(--brand-primary); }
         .backup-row .btn-import { background: var(--ok); color: white; border-color: var(--ok); }
         .backup-row .btn-reset { background: #fff; color: #c33; border-color: #fcc; }
         .mod-badge {
@@ -543,13 +564,539 @@
             font-weight: 600;
             margin-left: 4px;
         }
+
+        /* V5.4: 법적 고지 모달 (개인정보·이용약관·면책) */
+        .legal-modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1500;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 10px;
+            overflow-y: auto;
+        }
+        .legal-modal-bg.show { display: flex; }
+        .legal-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            margin: auto;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        .legal-modal h3 {
+            margin: 0 0 6px;
+            color: var(--brand-deep);
+            font-size: 19px;
+            font-weight: 800;
+        }
+        .legal-modal .legal-sub {
+            font-size: 12px;
+            color: var(--label-gray);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .legal-section {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .legal-section .legal-head {
+            padding: 12px 14px;
+            background: #f8fafc;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--brand-deep);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+        .legal-section .legal-head:hover { background: #eef2f7; }
+        .legal-section .legal-body {
+            display: none;
+            padding: 14px 16px;
+            font-size: 12.5px;
+            line-height: 1.65;
+            color: var(--text-dark);
+            background: #fff;
+            border-top: 1px solid var(--border);
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        .legal-section.open .legal-body { display: block; }
+        .legal-section .legal-body h5 {
+            margin: 10px 0 4px;
+            font-size: 13px;
+            color: var(--brand-primary);
+        }
+        .legal-section .legal-body p { margin: 4px 0; }
+        .legal-section .legal-body ol,
+        .legal-section .legal-body ul { padding-left: 20px; margin: 4px 0; }
+        .legal-section .legal-body li { margin: 3px 0; }
+        .legal-section .legal-body code {
+            background: #f0f2f5;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        .legal-checks {
+            margin: 16px 0 12px;
+            padding: 12px 14px;
+            background: #fffbf0;
+            border: 1px solid #f0d68a;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .legal-checks label {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 4px 0;
+            cursor: pointer;
+            margin: 0;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        .legal-checks input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            flex: 0 0 auto;
+        }
+        .legal-actions { display: flex; gap: 8px; margin-top: 8px; }
+        .legal-actions button {
+            flex: 1;
+            padding: 13px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .legal-actions .btn-accept {
+            background: var(--brand-primary);
+            color: white;
+        }
+        .legal-actions .btn-accept:hover { background: var(--brand-deep); }
+        .legal-actions .btn-accept:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .legal-actions .btn-decline {
+            background: #f0f0f0;
+            color: var(--text-dark);
+        }
+        .legal-modal .legal-version {
+            text-align: right;
+            font-size: 10px;
+            color: var(--label-gray);
+            margin-top: 10px;
+        }
+        /* 풋터 — 법적 정보 재열람 */
+        .legal-footer {
+            text-align: center;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+            color: var(--label-gray);
+            line-height: 1.6;
+        }
+        .legal-footer a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .legal-footer a:hover { text-decoration: underline; }
+
+        /* V5.4 P1-10: localStorage 상태 배지 */
+        .storage-badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: #f0f0f0;
+            color: var(--label-gray);
+            font-weight: 600;
+            margin-left: 4px;
+            cursor: help;
+        }
+        .storage-badge.warn { background: #fff3cd; color: #856404; }
+        .storage-badge.danger {
+            background: #f8d7da;
+            color: #721c24;
+            animation: pulse 1.6s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+
+        /* V5.4: 라이선스 모달 */
+        .license-modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 10px;
+            overflow-y: auto;
+        }
+        .license-modal-bg.show { display: flex; }
+        .license-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 26px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+            margin: auto;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        .license-modal h3 {
+            margin: 0 0 6px;
+            color: var(--brand-deep);
+            font-size: 19px;
+            font-weight: 800;
+        }
+        .license-modal .lic-sub {
+            font-size: 12px;
+            color: var(--label-gray);
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+        .license-modal label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-dark);
+            margin: 10px 0 4px;
+        }
+        .license-modal input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f8fafc;
+            font-family: inherit;
+            -webkit-user-select: auto;
+            user-select: auto;
+        }
+        .license-modal input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            background: white;
+        }
+        #licKey {
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .license-result {
+            margin-top: 14px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            line-height: 1.5;
+            display: none;
+        }
+        .license-result.success {
+            display: block;
+            background: #d4edda;
+            border-left: 3px solid var(--ok);
+            color: #155724;
+        }
+        .license-result.error {
+            display: block;
+            background: #f8d7da;
+            border-left: 3px solid #c33;
+            color: #721c24;
+        }
+        .license-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 18px;
+        }
+        .license-actions button {
+            flex: 1;
+            padding: 13px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .license-actions .btn-activate {
+            background: var(--brand-primary);
+            color: white;
+        }
+        .license-actions .btn-activate:hover { background: var(--brand-deep); }
+        .license-actions .btn-activate:disabled {
+            background: #ccc;
+            cursor: wait;
+        }
+        .license-actions .btn-purchase {
+            background: #fffbf0;
+            border: 1px solid #f0d68a;
+            color: #8a6a00;
+        }
+        .license-info-box {
+            background: #f0f4fa;
+            border-left: 3px solid var(--brand-primary);
+            padding: 10px 12px;
+            margin-top: 12px;
+            border-radius: 4px;
+            font-size: 11.5px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        .license-info-box b { color: var(--brand-deep); }
+        /* 만료/잠금 화면 */
+        .license-lock {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.97);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .license-lock.show { display: flex; }
+        .license-lock .lock-card {
+            max-width: 420px;
+            padding: 30px;
+        }
+        .license-lock h2 {
+            color: #c33;
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+        .license-lock p {
+            color: #555;
+            line-height: 1.7;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        .license-lock button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            width: auto;
+        }
+
+        /* V5.4 P1-6: CRM 컬럼 매핑 모달 */
+        .mapping-modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1800;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 10px;
+            overflow-y: auto;
+        }
+        .mapping-modal-bg.show { display: flex; }
+        .mapping-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            width: 100%;
+            max-width: 720px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.28);
+            margin: auto;
+        }
+        .mapping-modal h3 {
+            margin: 0 0 6px;
+            color: var(--brand-deep);
+            font-size: 18px;
+            font-weight: 800;
+        }
+        .mapping-modal .map-sub {
+            font-size: 12px;
+            color: var(--label-gray);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+        .map-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            margin-bottom: 8px;
+        }
+        .map-row > div { flex: 1; }
+        .map-row label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--label-gray);
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+        .map-row select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            background: #f8fafc;
+            -webkit-user-select: auto;
+            user-select: auto;
+        }
+        .map-status {
+            background: #f0f4fa;
+            border-left: 3px solid var(--brand-primary);
+            padding: 10px 12px;
+            border-radius: 4px;
+            margin: 14px 0;
+            font-size: 12.5px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        .map-status.ok { background: #d4edda; border-left-color: var(--ok); color: #155724; }
+        .map-status.warn { background: #fff3cd; border-left-color: var(--warn); color: #856404; }
+        .map-fields-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 12px;
+            margin-top: 8px;
+        }
+        @media (max-width: 540px) {
+            .map-fields-grid { grid-template-columns: 1fr; }
+        }
+        .map-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+        }
+        .map-field .map-label {
+            flex: 0 0 auto;
+            font-size: 12.5px;
+            color: var(--text-dark);
+            min-width: 100px;
+            font-weight: 600;
+        }
+        .map-field .map-label .req {
+            color: #c33;
+            margin-left: 2px;
+        }
+        .map-field select {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 12px;
+            background: white;
+            -webkit-user-select: auto;
+            user-select: auto;
+        }
+        .map-field select.auto-matched {
+            border-color: var(--ok);
+            background: #f0fdf4;
+        }
+        .map-field select.required-unset {
+            border-color: #c33;
+            background: #fef2f2;
+        }
+        .map-preview {
+            margin-top: 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .map-preview table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        .map-preview th, .map-preview td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: left;
+            white-space: nowrap;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .map-preview th {
+            background: var(--brand-primary);
+            color: white;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+        }
+        .map-preview tr:hover td { background: var(--light-blue); }
+        .map-preview .preview-empty {
+            padding: 20px;
+            text-align: center;
+            color: var(--label-gray);
+            font-size: 12px;
+        }
+        .map-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .map-actions button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .map-actions .btn-map-cancel {
+            background: #f0f0f0;
+            color: var(--text-dark);
+        }
+        .map-actions .btn-map-preview {
+            background: #fffbf0;
+            border: 1px solid #f0d68a;
+            color: #8a6a00;
+        }
+        .map-actions .btn-map-confirm {
+            background: var(--brand-primary);
+            color: white;
+        }
+        .map-actions .btn-map-confirm:hover { background: var(--brand-deep); }
+        .map-actions .btn-map-confirm:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🏆 자동차 판매왕 문자 생성기</h2>
-    <div class="subtitle">V5.3 · 내 템플릿 편집·저장 · CRM 연동 · 포드젠틀맨</div>
+    <h2 id="appTitle">🏆 자동차 판매왕 문자 생성기</h2>
+    <div class="subtitle">V5.4 · 내 템플릿 편집·저장 · CRM 연동</div>
 
     <!-- ===== CRM 연동 패널 ===== -->
     <div class="crm-panel">
@@ -576,7 +1123,79 @@
             <div class="sc-row" id="scInfo"></div>
         </div>
 
-        <div class="hint">💡 CRM 파일 한 번 로드 시 브라우저에 자동 저장됩니다.</div>
+        <div class="hint">
+            💡 CRM 파일 한 번 로드 시 브라우저에 자동 저장됩니다. 어떤 양식의 엑셀이든 컬럼을 자동 인식하며, 인식되지 않을 경우 매핑 화면이 표시됩니다.<br>
+            <span style="margin-top:4px;display:inline-block;">📦 저장소 사용량: <span id="storageBadge" class="storage-badge" title="로컬 저장소 사용량">계산 중...</span></span>
+        </div>
+    </div>
+
+    <!-- ===== V5.4: 내 프로필 설정 (화이트라벨) ===== -->
+    <div class="var-panel" id="profilePanel">
+        <div class="var-toggle" onclick="toggleProfile()">
+            <span>👤 내 프로필 설정 <span id="profileStatus" style="font-size:11px;font-weight:500;margin-left:4px;"></span></span>
+            <span id="profileToggleIcon">▼</span>
+        </div>
+        <div id="profileContent" class="var-content" style="padding-bottom:14px;">
+            <div style="font-size:11px;color:var(--label-gray);margin:8px 0 10px;line-height:1.5;">
+                ※ 한 번만 입력하시면 모든 템플릿의 <code>[딜러명]</code> <code>[딜러사명]</code> <code>[전시장명]</code> <code>[직급]</code>이 자동 채워집니다.
+            </div>
+            <div class="input-group">
+                <div>
+                    <label for="pfName" style="font-size:12px;">이름</label>
+                    <input type="text" id="pfName" placeholder="홍길동" oninput="saveProfile()" style="padding:8px;font-size:13px;">
+                </div>
+                <div>
+                    <label for="pfTitle" style="font-size:12px;">직급</label>
+                    <input type="text" id="pfTitle" placeholder="부장 / 차장 / 매니저" oninput="saveProfile()" style="padding:8px;font-size:13px;">
+                </div>
+            </div>
+            <div class="input-group">
+                <div>
+                    <label for="pfCompany" style="font-size:12px;">딜러사명</label>
+                    <input type="text" id="pfCompany" placeholder="OO자동차 공식딜러" oninput="saveProfile()" style="padding:8px;font-size:13px;">
+                </div>
+                <div>
+                    <label for="pfShowroom" style="font-size:12px;">전시장명</label>
+                    <input type="text" id="pfShowroom" placeholder="OO전시장" oninput="saveProfile()" style="padding:8px;font-size:13px;">
+                </div>
+            </div>
+            <div class="input-group">
+                <div>
+                    <label for="pfPhone" style="font-size:12px;">내 연락처</label>
+                    <input type="text" id="pfPhone" placeholder="010-0000-0000" oninput="saveProfile()" style="padding:8px;font-size:13px;">
+                </div>
+                <div>
+                    <label for="pfAddress" style="font-size:12px;">전시장 주소</label>
+                    <input type="text" id="pfAddress" placeholder="OO시 OO구..." oninput="saveProfile()" style="padding:8px;font-size:13px;">
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:10px;">
+                <label for="pfColor" style="font-size:12px;margin-bottom:0;flex:0 0 auto;">테마 색상</label>
+                <input type="color" id="pfColor" value="#003499" oninput="saveProfile()" style="width:60px;height:32px;padding:2px;cursor:pointer;">
+                <button type="button" onclick="resetThemeColor()" style="width:auto;padding:6px 10px;font-size:11px;font-weight:500;background:#f0f0f0;color:#555;border-radius:4px;flex:0 0 auto;">기본값</button>
+                <span style="font-size:11px;color:var(--label-gray);">앱 버튼·헤더 색상이 변경됩니다</span>
+            </div>
+
+            <!-- V5.4 P1-7: 통합 설정 백업/복원 -->
+            <div style="border-top:1px dashed var(--border);margin-top:14px;padding-top:12px;">
+                <div style="font-size:11px;color:var(--label-gray);margin-bottom:6px;line-height:1.5;">
+                    💾 <b>전체 설정 백업</b> — 프로필·서명·사용자 템플릿·CRM 매핑을 한 파일로 백업합니다. 휴대폰 교체 시 5초 복원.
+                </div>
+                <div style="display:flex;gap:6px;">
+                    <button type="button" onclick="exportAllSettings()" style="flex:1;padding:8px;font-size:12px;font-weight:600;background:var(--brand-primary);color:white;border:none;border-radius:6px;cursor:pointer;">📤 전체 설정 내려받기</button>
+                    <button type="button" onclick="document.getElementById('importAllFile').click()" style="flex:1;padding:8px;font-size:12px;font-weight:600;background:var(--ok);color:white;border:none;border-radius:6px;cursor:pointer;">📥 전체 설정 복원</button>
+                    <input type="file" id="importAllFile" accept=".json" style="display:none" onchange="importAllSettings(event)">
+                </div>
+            </div>
+
+            <!-- V5.4 P1-8: PWA 홈화면 추가 -->
+            <div style="border-top:1px dashed var(--border);margin-top:14px;padding-top:12px;">
+                <div style="font-size:11px;color:var(--label-gray);margin-bottom:6px;line-height:1.5;">
+                    📱 <b>홈화면에 앱으로 설치</b> — 브라우저 없이 아이콘 1번 탭으로 실행. 오프라인에서도 사용 가능 (HTTPS 호스팅 시).
+                </div>
+                <button type="button" id="btnInstallPwa" onclick="triggerInstall()" style="width:100%;padding:10px;font-size:13px;font-weight:600;background:#fff;color:var(--brand-primary);border:1px solid var(--brand-primary);border-radius:6px;cursor:pointer;display:none;">📱 홈화면에 추가</button>
+            </div>
+        </div>
     </div>
 
     <!-- ===== 기본 입력 ===== -->
@@ -591,8 +1210,14 @@
         </div>
     </div>
 
-    <label for="mySignature">✍ 나만의 마무리/서명 (자동 저장)</label>
-    <textarea id="mySignature" class="signature-box" placeholder="예:&#13;포드젠틀맨 이진범 올림&#13;010-6237-6000" oninput="saveSignature()"></textarea>
+    <label for="sigSelect" style="margin-top:8px;">✍ 마무리/서명 (자동 저장 · 변수 자동 치환)</label>
+    <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+        <select id="sigSelect" onchange="onSignatureSelect()" style="flex:1;padding:8px;font-size:13px;-webkit-user-select:auto;user-select:auto;"></select>
+        <button type="button" onclick="addNewSignature()" style="width:auto;padding:8px 10px;font-size:12px;font-weight:600;background:#e6f4ea;color:var(--ok);border:1px solid var(--ok);border-radius:6px;cursor:pointer;" title="새 서명 추가">➕</button>
+        <button type="button" onclick="renameCurrentSignature()" style="width:auto;padding:8px 10px;font-size:12px;font-weight:600;background:#fffbf0;color:#8a6a00;border:1px solid #f0d68a;border-radius:6px;cursor:pointer;" title="이름 변경">✏</button>
+        <button type="button" onclick="deleteCurrentSignature()" style="width:auto;padding:8px 10px;font-size:12px;font-weight:600;background:#fee;color:#c33;border:1px solid #fcc;border-radius:6px;cursor:pointer;" title="현재 서명 삭제">🗑</button>
+    </div>
+    <textarea id="mySignature" class="signature-box" placeholder="예:&#13;[딜러사명]&#13;[전시장명] [딜러명] [직급] 드림&#13;[딜러연락처]" oninput="saveCurrentSignatureBody()"></textarea>
 
     <!-- ===== 동적 변수 패널 (NEW V5.1) ===== -->
     <div class="var-panel">
@@ -601,8 +1226,11 @@
             <span id="varToggleIcon">▼</span>
         </div>
         <div id="varContent" class="var-content">
-            <div class="var-section">📌 기본 (수동 입력)</div>
+            <div class="var-section">📌 기본 + 프로필 (자동)</div>
             <div class="var-chips" id="varChipsBasic"></div>
+
+            <div class="var-section">✍ 매번 직접 입력 (소개자·일시·요일)</div>
+            <div class="var-chips" id="varChipsManual"></div>
 
             <div class="var-section">👤 CRM 고객 정보</div>
             <div class="var-chips" id="varChipsCustomer"></div>
@@ -675,7 +1303,233 @@
 
     <button class="btn-copy" onclick="copyToClipboard()">카톡 / 문자로 복사하기 📋</button>
     <div id="toast" class="toast">✔ 복사 완료! 원하시는 곳에 붙여넣기 하세요.</div>
+
+    <!-- V5.4: 풋터 — 법적 정보 + 라이선스 상태 -->
+    <div class="legal-footer">
+        본 도구는 영업 활동 보조용으로 모든 데이터는 사용자의 브라우저에만 저장됩니다.<br>
+        <a onclick="openConsent(true)">ⓘ 개인정보 처리방침 · 이용약관 · 면책조항</a>
+        · <span id="consentStatus">동의 미확인</span><br>
+        <a onclick="openLicenseModal(true)">🔑 라이선스 정보</a>
+        · <span id="licenseStatus">미활성</span>
+    </div>
 </div>
+
+<!-- V5.4: 법적 고지 동의 모달 (첫 실행 자동 표시) -->
+<div id="consentModal" class="legal-modal-bg">
+    <div class="legal-modal">
+        <h3>📜 사용 전 동의 사항</h3>
+        <div class="legal-sub">
+            본 프로그램(이하 "도구")을 사용하기 전 아래 세 가지 사항을 확인하고 동의해 주시기 바랍니다.
+            모든 고객 데이터는 <b>사용자 본인의 브라우저(localStorage)에만 저장</b>되며 어떤 외부 서버로도 전송되지 않습니다.
+        </div>
+
+        <!-- 1. 개인정보 처리방침 -->
+        <div class="legal-section" id="legalPrivacy">
+            <div class="legal-head" onclick="toggleLegalSection('legalPrivacy')">
+                <span>1. 개인정보 처리방침 (필수)</span>
+                <span class="legal-arrow">▼</span>
+            </div>
+            <div class="legal-body">
+                <h5>제1조 (수집·저장하는 정보)</h5>
+                <p>본 도구는 사용자가 직접 가져온 CRM 엑셀 파일에서 다음 항목을 사용자의 브라우저 저장소(localStorage)에 캐싱합니다:</p>
+                <ul>
+                    <li>고객 성명·연락처·차종·트림·거주지·직장·진행상태·가망등급</li>
+                    <li>최초상담일·계약일·출고일·등록번호·결제방식·약정기간·보험만기·메모</li>
+                </ul>
+                <p>사용자 본인의 정보로 <code>딜러명·직급·딜러사·전시장명·연락처·전시장주소·테마색</code>이 별도 저장됩니다.</p>
+
+                <h5>제2조 (외부 전송 금지)</h5>
+                <p>본 도구는 위 정보를 <b>외부 서버로 일절 전송하지 않으며 수집하지 않습니다.</b> 모든 처리는 사용자 단말의 브라우저 내에서만 이루어집니다. 단, SheetJS 라이브러리가 <code>cdn.sheetjs.com</code>에서 1회 로드되나, 이는 코드 모듈일 뿐 사용자 데이터는 함께 전송되지 않습니다.</p>
+
+                <h5>제3조 (사용자의 의무 — 개인정보 보호법 준수)</h5>
+                <p>본 도구를 사용하는 영업사원(이하 "사용자")은 <b>개인정보보호법상 개인정보처리자</b>의 지위를 가지며 다음 의무를 부담합니다:</p>
+                <ol>
+                    <li>고객의 개인정보를 영업 목적으로 사용함에 있어 별도의 수집·이용 동의를 받을 것</li>
+                    <li>고객의 열람·정정·삭제 요청 시 즉시 처리할 것</li>
+                    <li>단말 분실·도난·매각 시 사전에 데이터를 삭제할 것 (CRM 패널의 🗑 버튼 또는 브라우저 데이터 삭제)</li>
+                    <li>고객 데이터를 제3자에게 공유·양도하지 않을 것</li>
+                </ol>
+
+                <h5>제4조 (보관 기간 및 파기)</h5>
+                <p>사용자가 직접 캐시를 비우거나 브라우저 데이터를 삭제할 때까지 보관됩니다. 사용자가 도구 내 "캐시 비우기" 또는 "전체 초기화"를 실행하면 즉시 파기됩니다.</p>
+
+                <h5>제5조 (책임의 범위)</h5>
+                <p>본 도구는 데이터 보관소(저장·전송 인프라)가 아닌 텍스트 생성 도구입니다. 사용자가 브라우저에 저장한 데이터의 보안·암호화·백업 책임은 사용자 본인에게 있습니다.</p>
+            </div>
+        </div>
+
+        <!-- 2. 이용약관 -->
+        <div class="legal-section" id="legalTerms">
+            <div class="legal-head" onclick="toggleLegalSection('legalTerms')">
+                <span>2. 이용약관 (필수)</span>
+                <span class="legal-arrow">▼</span>
+            </div>
+            <div class="legal-body">
+                <h5>제1조 (라이선스 범위)</h5>
+                <ol>
+                    <li>본 도구의 라이선스는 <b>1인 1라이선스</b>이며 영업 활동을 수행하는 본인에 한하여 사용 가능합니다.</li>
+                    <li>라이선스 양도·재판매·재배포·임대·공유는 금지됩니다.</li>
+                    <li>HTML 코드의 무단 복제·역공학·수정 후 재배포는 저작권 침해에 해당합니다.</li>
+                </ol>
+
+                <h5>제2조 (허용 범위)</h5>
+                <ol>
+                    <li>본인이 담당하는 자동차 영업 활동 (신차·중고차·리스·렌트 등)</li>
+                    <li>본인이 직접 만든 변수·템플릿의 추가·수정·백업</li>
+                    <li>본인이 보유한 CRM 엑셀 파일을 가져와 처리</li>
+                </ol>
+
+                <h5>제3조 (금지 사항)</h5>
+                <ol>
+                    <li>스팸·광고성 정보 일괄 전송 등 정보통신망법·전자상거래법 위반 행위</li>
+                    <li>고객의 사전 동의 없는 영리적 마케팅 메시지 발송</li>
+                    <li>본 도구를 이용한 불법·반사회적 행위</li>
+                </ol>
+
+                <h5>제4조 (업데이트 정책)</h5>
+                <p>구매 시 명시된 라이선스 정책에 따라 무료 또는 유료 업데이트가 제공됩니다. 자세한 사항은 구매 안내문을 따릅니다.</p>
+
+                <h5>제5조 (환불 정책)</h5>
+                <p>전자상거래법에 따라 결제일로부터 7일 이내, 사용 흔적이 없는 경우 전액 환불 가능합니다. 단 라이선스 키가 활성화된 후에는 디지털 콘텐츠 특성상 환불이 제한될 수 있습니다.</p>
+
+                <h5>제6조 (라이선스 종료)</h5>
+                <p>제1조·제3조를 위반할 경우 라이선스가 즉시 종료되며, 별도 통보 없이 사용이 중지될 수 있습니다.</p>
+            </div>
+        </div>
+
+        <!-- 3. 면책조항 -->
+        <div class="legal-section" id="legalDisclaimer">
+            <div class="legal-head" onclick="toggleLegalSection('legalDisclaimer')">
+                <span>3. 면책 조항 (확인)</span>
+                <span class="legal-arrow">▼</span>
+            </div>
+            <div class="legal-body">
+                <h5>1. 도구의 성격</h5>
+                <p>본 도구는 영업 보조용 <b>텍스트 생성기</b>이며, 카카오톡·SMS 등 통신사 서비스 자체와는 무관합니다. 생성된 문자는 사용자가 직접 복사하여 원하는 채널로 발송해야 합니다.</p>
+
+                <h5>2. 데이터 손실</h5>
+                <p>다음과 같은 경우 데이터가 손실될 수 있으며, 이에 대한 책임은 사용자 본인에게 있습니다:</p>
+                <ul>
+                    <li>브라우저 데이터 자동 삭제(시크릿 모드·캐시 정리·확장 프로그램)</li>
+                    <li>단말 초기화·교체</li>
+                    <li>localStorage 용량 한도 초과</li>
+                </ul>
+                <p>중요한 사용자 템플릿은 도구 내 <code>📤 백업 내려받기</code> 기능으로 정기 백업하시기 바랍니다.</p>
+
+                <h5>3. 정확성 보장</h5>
+                <p>변수 자동 치환 결과(D+일수·출고연수·보험만기 등)의 정확성은 사용자가 발송 전 반드시 검증해야 합니다. 본 도구의 결과로 발생한 영업·계약·고객 응대상의 손해에 대해 개발사는 책임을 지지 않습니다.</p>
+
+                <h5>4. 영업 성과</h5>
+                <p>본 도구는 영업 활동의 효율화를 돕는 보조 수단이며, 영업 실적·매출·계약 성공률을 보장하지 않습니다.</p>
+
+                <h5>5. 분쟁 해결</h5>
+                <p>본 도구의 사용과 관련하여 분쟁이 발생할 경우, 사용자의 주소지 관할 법원을 합의관할로 합니다. 본 약관은 대한민국 법령을 따릅니다.</p>
+            </div>
+        </div>
+
+        <!-- 동의 체크 -->
+        <div class="legal-checks">
+            <label>
+                <input type="checkbox" id="agreePrivacy" onchange="updateAcceptBtn()">
+                <span>위 <b>개인정보 처리방침</b>을 충분히 검토하였으며 이에 동의합니다. (필수)</span>
+            </label>
+            <label>
+                <input type="checkbox" id="agreeTerms" onchange="updateAcceptBtn()">
+                <span>위 <b>이용약관 및 면책조항</b>을 충분히 검토하였으며 이에 동의합니다. (필수)</span>
+            </label>
+        </div>
+
+        <div class="legal-actions">
+            <button class="btn-decline" onclick="declineConsent()">동의하지 않음 (사용 종료)</button>
+            <button class="btn-accept" id="btnAcceptConsent" onclick="acceptConsent()" disabled>동의하고 시작하기</button>
+        </div>
+        <div class="legal-version">법적 고지 버전 v5.4 · 최종 개정 2026-06-01</div>
+    </div>
+</div>
+
+<!-- V5.4: 라이선스 활성화 모달 -->
+<div id="licenseModal" class="license-modal-bg">
+    <div class="license-modal">
+        <h3>🔑 라이선스 활성화</h3>
+        <div class="lic-sub">
+            구매 시 안내받은 <b>라이선스 키</b>와 <b>가입 이메일·이름</b>을 입력해 주십시오.<br>
+            본 키는 1인 1라이선스이며, 본인의 단말에만 등록됩니다.
+        </div>
+
+        <label for="licEmail">가입 이메일</label>
+        <input type="email" id="licEmail" placeholder="example@email.com" autocomplete="email">
+
+        <label for="licName">가입 이름</label>
+        <input type="text" id="licName" placeholder="홍길동" autocomplete="name">
+
+        <label for="licKey">라이선스 키</label>
+        <input type="text" id="licKey" placeholder="PSW-XXXXXX-XXXX-XXXX-XXXX-XXXX" maxlength="32">
+
+        <div id="licResult" class="license-result"></div>
+
+        <div class="license-info-box">
+            <b>📌 키 발급 안내</b><br>
+            • 구매 후 영업일 기준 1일 내 이메일로 발송됩니다.<br>
+            • 키를 분실하셨거나 단말 교체로 재발급이 필요하신 경우 구매처에 문의하시기 바랍니다.<br>
+            • <b>체험판 사용 시</b> 입력란을 모두 비우고 <code>체험판 시작</code>을 눌러주세요. (일부 기능 제한)
+        </div>
+
+        <div class="license-actions">
+            <button class="btn-purchase" onclick="startTrial()">체험판 시작</button>
+            <button class="btn-activate" id="btnActivateLic" onclick="activateLicense()">활성화하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- V5.4: 라이선스 만료/잠금 화면 -->
+<div id="licenseLock" class="license-lock">
+    <div class="lock-card">
+        <h2>🔒 라이선스 만료</h2>
+        <p id="lockMessage">사용 중인 라이선스가 만료되었습니다.</p>
+        <p style="font-size:12.5px;color:#888;">
+            계속 사용하시려면 라이선스를 갱신해 주십시오.<br>
+            구매처를 통해 갱신 신청 가능합니다.
+        </p>
+        <button onclick="openLicenseModal(true)">새 키 입력</button>
+    </div>
+</div>
+
+<!-- V5.4 P1-6: CRM 컬럼 매핑 모달 -->
+<div id="mappingModal" class="mapping-modal-bg">
+    <div class="mapping-modal">
+        <h3>📋 CRM 엑셀 컬럼 매핑</h3>
+        <div class="map-sub">
+            업로드하신 파일의 컬럼을 자동으로 인식하지 못한 항목이 있습니다.<br>
+            각 항목에 해당하는 엑셀 컬럼을 직접 지정해 주십시오. <b>한 번 설정하면 같은 형식 파일은 다음부터 자동 적용</b>됩니다.
+        </div>
+
+        <div class="map-row">
+            <div>
+                <label>📄 시트 선택</label>
+                <select id="mapSheetSel" onchange="onMapSheetChange()"></select>
+            </div>
+            <div>
+                <label>📑 헤더 행 위치</label>
+                <select id="mapHeaderRowSel" onchange="onMapHeaderRowChange()"></select>
+            </div>
+        </div>
+
+        <div id="mapStatus" class="map-status"></div>
+
+        <div class="map-fields-grid" id="mapFieldsGrid"></div>
+
+        <div class="map-preview" id="mapPreview">
+            <div class="preview-empty">미리보기 — [미리보기] 버튼을 누르세요</div>
+        </div>
+
+        <div class="map-actions">
+            <button class="btn-map-cancel" onclick="cancelMapping()">취소</button>
+            <button class="btn-map-preview" onclick="previewMapping()">👀 미리보기</button>
+            <button class="btn-map-confirm" id="btnMapConfirm" onclick="confirmMapping()">✅ 이대로 가져오기</button>
+        </div>
+    </div>
+</div>
+
 <!-- V5.3: 템플릿 편집 모달 -->
 <div id="editorModal" class="modal-bg" onclick="if(event.target===this)closeEditor()">
     <div class="modal">
@@ -687,10 +1541,12 @@
         <div class="var-help">
             <b>💡 사용 가능 변수</b><br>
             기본: <code>[고객명]</code> <code>[차종]</code><br>
+            프로필(자동): <code>[딜러명]</code> <code>[직급]</code> <code>[딜러사명]</code> <code>[전시장명]</code> <code>[딜러연락처]</code> <code>[전시장주소]</code><br>
+            매번 입력: <code>[소개자]</code> <code>[시승일시]</code> <code>[탁송요일]</code><br>
             CRM: <code>[연락처]</code> <code>[브랜드]</code> <code>[거주지]</code> <code>[직장]</code><br>
             계약: <code>[출고일]</code> <code>[등록번호]</code> <code>[결제방식]</code> <code>[약정기간]</code> <code>[보험만기]</code><br>
             자동: <code>[D+일수]</code> <code>[출고연수]</code> <code>[월]</code> <code>[보험D-day]</code><br>
-            <b>한글 조사 마커</b>: 차종 뒤에 <code>{이/가}</code> <code>{을/를}</code> <code>{은/는}</code> <code>{와/과}</code> <code>{으로/로}</code> 사용 시 받침 자동 처리
+            <b>한글 조사 마커</b>: 변수 뒤에 <code>{이/가}</code> <code>{을/를}</code> <code>{은/는}</code> <code>{와/과}</code> <code>{으로/로}</code> 사용 시 받침 자동 처리
         </div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeEditor()">취소</button>
@@ -700,11 +1556,140 @@
 </div>
 
 <script>
-    // ==================== 변수 정의 (V5.1) ====================
+    // ==================== V5.4 P1-8: PWA (Service Worker + 동적 Manifest + 설치 프롬프트) ====================
+    let deferredInstallPrompt = null; // beforeinstallprompt 이벤트 저장
+    let pwaInstalled = false;
+
+    function isSecureForSW() {
+        // Service Worker는 https/localhost/file:// 중 https·localhost만 동작
+        return location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    }
+
+    function buildDynamicManifest(profile) {
+        const color = (profile && profile.color) || '#003499';
+        const colorEnc = color.replace('#','%23');
+        const name = (profile && (profile.company || profile.name)) || '판매왕문자';
+        const initial = (name.trim().charAt(0)) || '판';
+        const iconSvg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><rect width='256' height='256' rx='48' fill='${colorEnc}'/><text x='50%25' y='58%25' font-size='150' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='800'>${initial}</text></svg>`;
+        const manifest = {
+            name: name + ' · 판매왕문자',
+            short_name: name.slice(0, 12),
+            description: '자동차 영업 문자 생성기',
+            start_url: './판매왕문자_V5.4.html',
+            scope: './',
+            display: 'standalone',
+            orientation: 'portrait',
+            background_color: color,
+            theme_color: color,
+            lang: 'ko-KR',
+            icons: [{ src: iconSvg, sizes: '192x192 256x256 512x512', type: 'image/svg+xml', purpose: 'any maskable' }]
+        };
+        return 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+    }
+
+    function applyDynamicManifest() {
+        // file:// 환경에서는 별도 manifest.json fetch가 실패하므로 data URI로 대체
+        try {
+            const link = document.getElementById('appManifest');
+            if (!link) return;
+            if (location.protocol === 'file:') {
+                const pf = (typeof getProfile === 'function') ? getProfile() : null;
+                link.setAttribute('href', buildDynamicManifest(pf));
+            }
+            // HTTPS 환경에서는 별도 manifest.json 사용 (이미 href에 설정됨)
+        } catch(e) { console.warn('[PWA] manifest 적용 실패:', e.message); }
+    }
+
+    function registerServiceWorker() {
+        if (!('serviceWorker' in navigator)) {
+            console.info('[PWA] Service Worker 미지원 브라우저 — 오프라인 캐싱 비활성화');
+            return;
+        }
+        if (!isSecureForSW()) {
+            console.info('[PWA] file://·http://는 Service Worker 미지원 — 오프라인 기능 비활성화 (HTTPS 호스팅 시 자동 활성)');
+            return;
+        }
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+            console.info('[PWA] Service Worker 등록 성공 (오프라인 모드 가능)', reg.scope);
+        }).catch(err => {
+            console.warn('[PWA] Service Worker 등록 실패:', err.message);
+        });
+    }
+
+    // 설치 프롬프트
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        updateInstallButton();
+    });
+    window.addEventListener('appinstalled', () => {
+        pwaInstalled = true;
+        deferredInstallPrompt = null;
+        updateInstallButton();
+    });
+
+    function updateInstallButton() {
+        const btn = document.getElementById('btnInstallPwa');
+        if (!btn) return;
+        const inStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        if (inStandalone || pwaInstalled) {
+            btn.style.display = 'none';
+            return;
+        }
+        if (deferredInstallPrompt) {
+            btn.style.display = '';
+            btn.textContent = '📱 홈화면에 추가 (1탭 설치)';
+            btn.disabled = false;
+        } else {
+            // iOS 사파리 등 beforeinstallprompt 미지원 — 안내 텍스트만
+            btn.style.display = '';
+            btn.textContent = '📱 홈화면 추가 안내';
+            btn.disabled = false;
+        }
+    }
+
+    function triggerInstall() {
+        if (deferredInstallPrompt) {
+            deferredInstallPrompt.prompt();
+            deferredInstallPrompt.userChoice.then(choice => {
+                console.info('[PWA] 설치 응답:', choice.outcome);
+                deferredInstallPrompt = null;
+                updateInstallButton();
+            });
+        } else {
+            // 수동 안내 (iOS 사파리 등)
+            const ua = navigator.userAgent || '';
+            let guide;
+            if (/iPhone|iPad|iPod/i.test(ua)) {
+                guide = '아이폰/아이패드 (사파리):\n\n1. 하단 [공유] 버튼 (□↑) 탭\n2. 메뉴에서 [홈 화면에 추가] 선택\n3. [추가] 탭\n\n홈 화면 아이콘으로 앱처럼 사용하실 수 있습니다.';
+            } else if (/Android/i.test(ua)) {
+                guide = '안드로이드 (크롬/엣지):\n\n1. 우상단 ⋮ (세로 점 3개) 탭\n2. [홈 화면에 추가] 또는 [앱 설치] 선택\n3. [설치] 탭\n\n홈 화면 아이콘으로 앱처럼 사용하실 수 있습니다.';
+            } else {
+                guide = 'PC (크롬/엣지):\n\n1. 주소창 우측 [⊕ 설치] 아이콘 클릭\n2. [설치] 클릭\n\n또는 ⋮ 메뉴 → [앱 설치].';
+            }
+            alert(guide);
+        }
+    }
+
+    // 초기화 (DOMContentLoaded보다 빨리 실행되도록 즉시 호출)
+    registerServiceWorker();
+
+    // ==================== 변수 정의 (V5.1 + V5.4 프로필·수동) ====================
     const VAR_DEFS = {
         basic: [
             {key: '[고객명]', desc: '고객 성함'},
-            {key: '[차종]', desc: '차량 모델'}
+            {key: '[차종]', desc: '차량 모델'},
+            {key: '[딜러명]',   src: 'pfName',     desc: '내 이름 (프로필)'},
+            {key: '[직급]',     src: 'pfTitle',    desc: '직급 (프로필)'},
+            {key: '[딜러사명]', src: 'pfCompany',  desc: '회사명 (프로필)'},
+            {key: '[전시장명]', src: 'pfShowroom', desc: '전시장 (프로필)'},
+            {key: '[딜러연락처]', src: 'pfPhone',  desc: '내 연락처 (프로필)'},
+            {key: '[전시장주소]', src: 'pfAddress', desc: '전시장 주소 (프로필)'}
+        ],
+        manual: [
+            {key: '[소개자]',   desc: '지인 소개자 이름 (매번 입력)'},
+            {key: '[시승일시]', desc: '시승 약속 일시 — 예: 5월 15일 오후 3시 (매번 입력)'},
+            {key: '[탁송요일]', desc: '차량 탁송 요일 — 예: 수 (매번 입력)'}
         ],
         customer: [
             {key: '[연락처]', src: 'phone'},
@@ -738,11 +1723,11 @@
     // ==================== 템플릿 (V5.1: 동적 변수 활용 + 신규 8종 추가) ====================
     const templates = {
         "contact": [
-            { val: "location", label: "📍 전시장 오시는 길 안내", text: "안녕하세요 [고객명] 고객님! 전시장 방문 일정 확정되어 오시는 길 안내해 드립니다.\n\n- 주소: [전시장 주소 입력]\n- 발렛/주차: 전시장 앞 도착 시 제 이름을 말씀해 주시면 편안하게 안내해 드립니다.\n\n오시는 길 안전 운전 하시고, 도착 즈음 연락 주시면 마중 나가 있겠습니다." },
+            { val: "location", label: "📍 전시장 오시는 길 안내", text: "안녕하세요 [고객명] 고객님! 전시장 방문 일정 확정되어 오시는 길 안내해 드립니다.\n\n- 전시장: [전시장명]\n- 주소: [전시장주소]\n- 발렛/주차: 전시장 앞 도착 시 제 이름을 말씀해 주시면 편안하게 안내해 드립니다.\n\n오시는 길 안전 운전 하시고, 도착 즈음 연락 주시면 마중 나가 있겠습니다." },
             { val: "showroom", label: "전시장 방문 감사 인사", text: "안녕하세요 [고객명] 고객님. 오늘 귀한 시간 내어 전시장까지 발걸음 해주셔서 진심으로 감사드립니다.\n\n오늘 안내해 드린 [차종]{이/가} 고객님의 라이프스타일에 든든한 파트너가 되어드릴 것이라 자신합니다. 귀가하시는 길 안전 운전 하시고, 추가로 궁금하신 점 있으시면 언제든 편하게 연락 주십시오." },
             { val: "phone", label: "전화 상담 직후 인사", text: "안녕하세요 [고객명] 고객님. 방금 [차종] 관련 전화 상담 도와드린 딜러입니다.\n\n유선상으로 충분히 전해드리지 못한 상세 자료와 견적서를 정리해 보내드립니다. 천천히 살펴보시고, 추가로 확인이 필요한 부분 있으시면 언제든 말씀해 주십시오." },
             { val: "sns", label: "SNS/유튜브/온라인 문의", text: "안녕하세요 [고객명] 고객님! 온라인 채널을 통해 [차종]에 관심 가져주시고 문의 남겨주셔서 감사드립니다.\n\n궁금해하신 옵션 구성과 이번 달 적용 가능한 프로모션 혜택을 정리해 두었습니다. 편하신 시간에 회신 주시면 상세히 안내해 드리겠습니다." },
-            { val: "referral", label: "지인 소개 첫 인사", text: "안녕하세요 [고객명] 고객님. OOO님의 소개로 인사드리는 자동차 영업사원 이진범입니다.\n\n소중한 분의 소개로 뵙게 된 만큼 [차종] 관련해서는 가장 유리한 조건과 최선의 서비스로 보답해 드리겠습니다. 편하신 시간에 연락 부탁드립니다." }
+            { val: "referral", label: "지인 소개 첫 인사", text: "안녕하세요 [고객명] 고객님. [소개자]님의 소개로 인사드리는 자동차 영업사원 [딜러명]입니다.\n\n소중한 분의 소개로 뵙게 된 만큼 [차종] 관련해서는 가장 유리한 조건과 최선의 서비스로 보답해 드리겠습니다. 편하신 시간에 연락 부탁드립니다." }
         ],
         "followup": [
             { val: "d3", label: "D+3 후속 안부", text: "안녕하세요 [고객명] 고객님. 며칠 전 안내해 드린 [차종] 자료는 잘 살펴보셨는지요?\n\n차량 구매라는 중요한 결정을 앞두고 고민이 많으실 줄 압니다. 비교하시면서 헷갈리는 옵션이나 금융 조건이 있으시면 명쾌하게 정리해 드리겠습니다. 편하게 연락 주십시오." },
@@ -750,10 +1735,10 @@
             { val: "d15", label: "D+15 결정 점검", text: "안녕하세요 [고객명] 고객님. 지난번 문의하신 [차종]에 적용되는 이번 달 한시 프로모션이 곧 마감 예정이라, 놓치시면 아쉬울 것 같아 연락드립니다.\n\n최종 결정에 도움 되시도록 추가 자료가 필요하시면 언제든 말씀해 주십시오." },
             { val: "d30", label: "D+30 마지막 푸시", text: "[고객명] 고객님! 이번 달 [차종]에 적용되는 분기 마감 특별 혜택이 매우 좋은 조건으로 마련되어 안내드립니다.\n\n구매를 미루고 계셨다면 이번이 최적의 타이밍입니다. 꼭 저를 통해서가 아니더라도, 현재 조건이 어떤지 한 번 들어보시면 분명 도움 되실 겁니다." },
             { val: "missed", label: "부재중 후 안내문자", text: "안녕하세요 [고객명] 고객님. 연락드렸으나 통화가 어려우신 듯하여 문자 남깁니다.\n\n[차종] 관련하여 중요하게 전해드릴 안내 사항이 있어 연락드렸습니다. 시간 나실 때 회신 주시거나, 통화 편하신 시간대를 남겨주시면 다시 연락 올리겠습니다." },
-            { val: "recontact", label: "D+30 이후 장기 재접촉", text: "안녕하세요 [고객명] 고객님. 예전에 [차종]{으로/로} 인연을 맺었던 딜러 이진범입니다. 그동안 잘 지내셨는지요.\n\n최근 해당 모델에 연식 변경 소식이 있어, 가장 먼저 고객님이 떠올라 안부 차 연락드립니다. 늘 건강하시고, 언제든 편하게 찾아주십시오." }
+            { val: "recontact", label: "D+30 이후 장기 재접촉", text: "안녕하세요 [고객명] 고객님. 예전에 [차종]{으로/로} 인연을 맺었던 딜러 [딜러명]입니다. 그동안 잘 지내셨는지요.\n\n최근 해당 모델에 연식 변경 소식이 있어, 가장 먼저 고객님이 떠올라 안부 차 연락드립니다. 늘 건강하시고, 언제든 편하게 찾아주십시오." }
         ],
         "testdrive": [
-            { val: "confirm", label: "시승 예약 확정", text: "[고객명] 고객님, [차종] 시승 예약 확정되었습니다.\n\n- 일시: O월 O일 O시\n- 장소: OO 전시장\n\n최상의 컨디션으로 차량 준비해 두겠습니다. 오시는 길 안전 운전 하십시오." },
+            { val: "confirm", label: "시승 예약 확정", text: "[고객명] 고객님, [차종] 시승 예약 확정되었습니다.\n\n- 일시: [시승일시]\n- 장소: [전시장명] ([전시장주소])\n\n최상의 컨디션으로 차량 준비해 두겠습니다. 오시는 길 안전 운전 하십시오." },
             { val: "remind", label: "시승 1일 전 리마인드", text: "안녕하세요 [고객명] 고객님. 내일은 [차종] 시승이 예약된 날입니다.\n\n운전면허증 꼭 지참 부탁드리며, 오시는 길에 변동 사항이 생기시면 언제든 연락 주십시오. 내일 뵙겠습니다!" },
             { val: "today", label: "시승 당일 도착 안내", text: "[고객명] 고객님, 전시장 도착하시면 발렛/주차 직원에게 제 이름 말씀해 주시면 원활하게 안내됩니다.\n\n시원한 음료와 함께 [차종] 시승 준비 완벽하게 마치고 기다리고 있겠습니다." },
             { val: "after", label: "시승 후 만족 확인", text: "[고객명] 고객님, 오늘 [차종] 시승은 만족스러우셨는지요.\n\n직접 경험하신 승차감과 기능들이 기대에 부합했기를 바랍니다. 오늘 동승하며 나눈 대화 잘 메모해 두었습니다. 댁에 돌아가셔서 상의해 보시고 편하게 연락 주십시오." },
@@ -770,7 +1755,7 @@
             { val: "contract_v51", label: "📝 계약 완료 후 정리 (V5.1 신규)", text: "[고객명] 고객님, 오늘 [차종] 계약 진행 잘 마무리되었습니다.\n\n- 계약일: [계약일]\n- 결제방식: [결제방식]\n- 약정기간: [약정기간]\n\n오늘 안내해 드린 사항들 다시 한 번 정리해 보내드립니다. 출고 일정 확정되는 대로 가장 먼저 보고드리겠습니다." }
         ],
         "predelivery": [
-            { val: "schedule", label: "차량 배차/탁송 일정 안내", text: "기쁜 소식 전해드립니다 [고객명] 고객님!\n\n고객님의 [차종] 차량이 드디어 이번 주 O요일에 전시장(작업장)으로 탁송될 예정입니다. 도착 즉시 제가 직접 꼼꼼하게 신차 검수를 진행하고 사진 보내드리겠습니다." },
+            { val: "schedule", label: "차량 배차/탁송 일정 안내", text: "기쁜 소식 전해드립니다 [고객명] 고객님!\n\n고객님의 [차종] 차량이 드디어 이번 주 [탁송요일]요일에 전시장(작업장)으로 탁송될 예정입니다. 도착 즉시 제가 직접 꼼꼼하게 신차 검수를 진행하고 사진 보내드리겠습니다." },
             { val: "delay", label: "🚨 출고 지연 양해 부탁 (위기관리)", text: "[고객명] 고객님, 기다리시는 [차종]의 출고 일정이 본사 물량 배정 지연으로 인해 당초 안내해 드린 것보다 조금 늦어지게 되었습니다.\n\n오랫동안 기대하시며 기다리셨을 텐데 불편을 드려 진심으로 죄송합니다. 매일 배정 상황을 최우선으로 체크하여 일정이 확정되는 즉시 가장 먼저 연락 올리겠습니다. 너른 양해 부탁드립니다." },
             { val: "insurance", label: "자동차보험 견적/가입 안내", text: "[고객명] 고객님, 차량 등록을 위해 자동차 보험 가입이 필요한 시점입니다.\n\n안내해 드린 차대번호로 주로 이용하시는 다이렉트 보험이나 담당 설계사를 통해 가입을 진행해 주시고, '보험가입증명서'를 제게 보내주시면 즉시 차량 등록 절차 진행하겠습니다." }
         ],
@@ -786,7 +1771,7 @@
             { val: "warranty", label: "보증 만료 3개월 전", text: "안녕하세요 [고객명] 고객님. 현재 운행 중이신 [차종]의 무상 보증 기간 만료가 약 3개월 정도 남았습니다.\n\n보증 기간이 끝나기 전에 서비스센터에 방문하시어 전반적인 차량 점검을 꼭 무상으로 받아보시기를 적극 권장해 드립니다." }
         ],
         "monthly": [
-            { val: "biz_monthly", label: "📞 월말 영업 안부 (V5.2 신규 · 실사용)", text: "포드 링컨 공식딜러\n선인자동차 일산전시장 이진범 부장입니다.\n\n[월]도 어느덧 마무리되어 가고 있습니다.\n차량 교체나 증차를 고민하고 계시거나, 주변에 차량 관련 문의가 있으신 분이 계시면 언제든 편하게 연락 부탁드립니다.\n신차 구매는 물론 차량 관련 궁금하신 점도 정성껏 상담 도와드리겠습니다.\n늘 보내주시는 관심과 성원에 감사드리며, 항상 건강하시고 가정에 행복이 가득하시길 기원합니다." },
+            { val: "biz_monthly", label: "📞 월말 영업 안부", text: "[딜러사명]\n[전시장명] [딜러명] [직급]입니다.\n\n[월]도 어느덧 마무리되어 가고 있습니다.\n차량 교체나 증차를 고민하고 계시거나, 주변에 차량 관련 문의가 있으신 분이 계시면 언제든 편하게 연락 부탁드립니다.\n신차 구매는 물론 차량 관련 궁금하신 점도 정성껏 상담 도와드리겠습니다.\n늘 보내주시는 관심과 성원에 감사드리며, 항상 건강하시고 가정에 행복이 가득하시길 기원합니다." },
             { val: "jan", label: "1월 (새해/희망)", text: "[고객명] 고객님! 새로운 희망으로 가득한 1월입니다.\n\n새해 계획하신 모든 일들이 순조롭게 이루어지기를 기원합니다. 추운 날씨에 건강 유의하시고, 올해도 [차종]{와/과} 함께 안전하고 행복한 여정 되시길 진심으로 응원합니다." },
             { val: "feb", label: "2월 (입춘/막바지 추위)", text: "[고객명] 고객님! 어느덧 겨울의 끝자락이자 봄을 기다리는 2월입니다.\n\n짧은 달인 만큼 하루하루 더욱 알차고 행복한 시간 보내시길 바랍니다. 막바지 꽃샘추위와 빙판길 조심하시고, 따뜻한 하루 보내십시오." },
             { val: "mar", label: "3월 (봄의 시작)", text: "[고객명] 고객님! 따뜻한 봄바람이 불어오는 3월입니다.\n\n겨우내 움츠렸던 몸과 마음을 활짝 펴고 기분 좋은 출발 하시기 바랍니다. 날씨 좋은 날 [차종]{와/과} 함께 여유로운 드라이브 즐기시며 힐링하는 시간 가지시길 바랍니다." },
@@ -811,7 +1796,7 @@
             { val: "newcar", label: "✨ 신차/부분변경 출시 안내", text: "안녕하세요 [고객명] 고객님. 평소 관심 가지실 만한 [차종]의 신형 모델 소식이 있어 안내해 드립니다.\n\n디자인과 옵션이 대폭 강화되었습니다. 혹시 대차 계획 있으시거나 관심 있으시다면 브로셔 챙겨 보내드리겠습니다." },
             { val: "referral", label: "🤝 출고 후 소개 요청", text: "[고객명] 고객님, 차량 운행은 만족하시는지요.\n\n저의 서비스에 만족하셨다면, 혹시 주변에 차량 구매를 계획 중인 지인이나 가족분 계실 때 저를 추천해 주실 수 있을까요. 고객님의 이름에 누가 되지 않도록 최고의 조건과 정성으로 대우하겠습니다." },
             { val: "cs", label: "💯 CS 최고점수 평가 감사", text: "진심으로 감사드립니다 [고객명] 고객님!\n\n바쁘신 와중에도 해피콜(CS) 평가에서 저에게 최고 점수를 주신 점 확인했습니다. 고객님의 따뜻한 격려가 영업을 뛰는 가장 큰 원동력이 됩니다. 늘 초심 잃지 않고 최선을 다하겠습니다." },
-            { val: "ref_thx", label: "🎁 지인 소개 감사 인사", text: "너무나 감사드립니다 [고객명] 고객님!\n\n소개해주신 OOO님과 상담 잘 마치고 좋은 인연을 맺게 되었습니다. 저를 잊지 않고 귀한 분 소개해주셔서 진심으로 고개 숙여 감사드립니다. 조만간 작지만 감사한 마음 담아 인사 올리겠습니다." },
+            { val: "ref_thx", label: "🎁 지인 소개 감사 인사", text: "너무나 감사드립니다 [고객명] 고객님!\n\n소개해주신 [소개자]님과 상담 잘 마치고 좋은 인연을 맺게 되었습니다. 저를 잊지 않고 귀한 분 소개해주셔서 진심으로 고개 숙여 감사드립니다. 조만간 작지만 감사한 마음 담아 인사 올리겠습니다." },
             { val: "event", label: "🎉 시승 행사 / VIP 초대", text: "안녕하세요 [고객명] 고객님! 이번 주말 저희 전시장에서 VIP 고객님들을 모시고 특별한 [차종] 시승 행사 및 케이터링 이벤트를 진행합니다.\n\n가족분들과 함께 편하게 방문하셔서 다과도 즐기시고 사은품도 받아가시면 좋겠습니다. 참석 가능하시면 회신 부탁드립니다." },
             { val: "longtime", label: "🌟 오래된 고객 안부 (V5.1 신규)", text: "[고객명] 고객님, 그간 잘 지내셨는지요.\n\n어느덧 [차종]{와/과} 함께하신 지 [출고연수]이 되었네요. 그동안 큰 탈 없이 잘 운행되고 있는지 문득 생각이 나 안부 인사 올립니다.\n\n혹시 점검이나 상담이 필요하시면 언제든 편하게 연락 주십시오. 늘 건강하시고 안전 운행 하시기 바랍니다." }
         ]
@@ -825,8 +1810,245 @@
     const LS_CRM_META = 'sales_king_crm_meta_v5';
     const LS_SIG = 'sales_king_signature';
     const LS_USER_TPL = 'sales_king_user_templates_v53';
+    const LS_PROFILE = 'sales_king_profile_v54';
+    const LS_CONSENT = 'sales_king_consent_v54';
+    const CONSENT_VERSION = '5.4-2026-06-01';
+    const LS_LICENSE = 'sales_king_license_v54';
+    // 라이선스 SECRET — base64 난독화 (코드 노출은 불가피, 단순 진입 장벽 용도)
+    const LICENSE_SECRET_B64 = 'UFNXLVNlY3JldC1WNS40LTIwMjYtSnVuZS1QYW5NYWVXYW5n';
+    function getLicenseSecret() { return atob(LICENSE_SECRET_B64); }
+
+    // ==================== V5.4 P1-10 1단계: localStorage 안전망 ====================
+    // 보수적 한도 — 사파리 5MB 기준 (크롬은 10MB 가능). 80% 도달 시 경고.
+    const STORAGE_LIMIT_BYTES = 5 * 1024 * 1024; // 5MB
+    const STORAGE_WARN_RATIO = 0.80;
+    let lastQuotaAlertAt = 0; // 5분에 한 번만 alert (중복 방지)
+
+    function getLocalStorageUsage() {
+        let total = 0;
+        try {
+            for (const key in localStorage) {
+                if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
+                    // 키와 값 모두 UTF-16 (2 bytes/char) 가정
+                    total += (String(localStorage[key]).length + key.length) * 2;
+                }
+            }
+        } catch(e) { /* private mode 등 */ }
+        return total;
+    }
+
+    function formatBytes(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function getStorageStatus() {
+        const used = getLocalStorageUsage();
+        const pct = Math.round((used / STORAGE_LIMIT_BYTES) * 100);
+        let level = 'ok';
+        if (pct >= 95) level = 'danger';
+        else if (pct >= 80) level = 'warn';
+        return { used, limit: STORAGE_LIMIT_BYTES, pct, level };
+    }
+
+    function isQuotaError(err) {
+        if (!err) return false;
+        const name = err.name || '';
+        const msg = (err.message || '').toLowerCase();
+        return name === 'QuotaExceededError' || name === 'NS_ERROR_DOM_QUOTA_REACHED'
+            || msg.includes('quota') || msg.includes('exceeded');
+    }
+
+    // 안전 저장 — quota 초과 시 사용자에게 명확한 알림 + 백업 권유
+    function safeSetItem(key, value) {
+        try {
+            localStorage.setItem(key, value);
+            updateStorageBadge(); // 저장 성공 시 상태 갱신
+            return true;
+        } catch(err) {
+            if (isQuotaError(err)) {
+                const status = getStorageStatus();
+                // 5분에 한 번만 alert (중복 방지)
+                const now = Date.now();
+                if (now - lastQuotaAlertAt > 5 * 60 * 1000) {
+                    lastQuotaAlertAt = now;
+                    setTimeout(() => alert(
+                        '⚠ 저장 공간 초과\n\n' +
+                        `현재 사용량: ${formatBytes(status.used)} / 약 5MB (브라우저 한도)\n` +
+                        `이번 저장 항목: ${key}\n\n` +
+                        '해결 방법:\n' +
+                        '1. 프로필 패널의 [📤 전체 설정 내려받기]로 백업 후\n' +
+                        '2. CRM 패널의 🗑 [캐시 비우기]로 데이터 정리\n' +
+                        '3. 또는 새 단말로 옮기시거나 IndexedDB 지원 버전(v5.5)으로 업그레이드'
+                    ), 50);
+                }
+                console.error('[Storage] Quota exceeded — key:', key, 'used:', formatBytes(status.used));
+            } else {
+                console.warn('[Storage] setItem failed — key:', key, err);
+            }
+            return false;
+        }
+    }
+
+    function updateStorageBadge() {
+        const el = document.getElementById('storageBadge');
+        if (!el) return;
+        const s = getStorageStatus();
+        const customerCount = (function() {
+            try {
+                return Array.isArray(customerList) ? customerList.length : 0;
+            } catch(e) { return 0; }
+        })();
+        const customerLabel = customerCount > 0 ? `${customerCount.toLocaleString('ko-KR')}명 · ` : '';
+        el.textContent = `${customerLabel}${formatBytes(s.used)} / 5MB (${s.pct}%)`;
+        el.className = 'storage-badge';
+        if (s.level === 'danger') {
+            el.classList.add('danger');
+            el.title = '⚠ 저장 한도 95% 초과 — 즉시 백업·정리 권장';
+        } else if (s.level === 'warn') {
+            el.classList.add('warn');
+            el.title = '⚠ 저장 한도 80% 도달 — 백업 권장';
+        } else {
+            el.title = `로컬 저장소 사용량 ${formatBytes(s.used)} / 5MB`;
+        }
+    }
     let editorMode = null; // 'edit' or 'new'
     let editorContext = null; // {category, val}
+
+    // ==================== V5.4: CRM 컬럼 매핑 시스템 (P1-6) ====================
+    const LS_MAPPINGS = 'sales_king_mappings_v54';
+
+    // 18개 필드별 자동 감지 키워드 (한국어·영어). 정확 매치 > 부분 매치 > 별칭
+    const FIELD_DEFS = [
+        { key: 'name',         label: '고객 이름',     required: true,  type: 'text', aliases: ['이름','성명','고객명','고객','담당고객','name','customer','full name'] },
+        { key: 'phone',        label: '연락처',         required: true,  type: 'phone', aliases: ['연락처','전화','전화번호','휴대폰','휴대전화','핸드폰','phone','mobile','tel','contact'] },
+        { key: 'status',       label: '진행 상태',     required: false, type: 'text', aliases: ['진행상태','상태','진행','단계','status','stage'] },
+        { key: 'grade',        label: '가망 등급',     required: false, type: 'text', aliases: ['가망등급','등급','가망','grade','rank','priority'] },
+        { key: 'brand',        label: '브랜드',         required: false, type: 'text', aliases: ['브랜드','제조사','메이커','make','brand','manufacturer'] },
+        { key: 'car',          label: '차종',           required: false, type: 'text', aliases: ['차종','모델','차량','관심차종','car','model','vehicle'] },
+        { key: 'trim',         label: '트림',           required: false, type: 'text', aliases: ['트림','옵션등급','trim','option'] },
+        { key: 'region',       label: '거주지',         required: false, type: 'text', aliases: ['거주지','지역','거주','주소','address','region','location'] },
+        { key: 'company',      label: '직장',           required: false, type: 'text', aliases: ['직장','회사','근무지','직업','company','work','employer'] },
+        { key: 'firstDate',    label: '최초 상담일',   required: false, type: 'date', aliases: ['최초상담일','상담일','문의일','첫상담','문의일자','first contact','inquiry date'] },
+        { key: 'contractDate', label: '계약일',         required: false, type: 'date', aliases: ['계약일','계약일자','contract','contract date','order date'] },
+        { key: 'deliveryDate', label: '출고일',         required: false, type: 'date', aliases: ['출고일','인도일','납차일','출고일자','delivery','delivery date'] },
+        { key: 'plate',        label: '등록번호',       required: false, type: 'text', aliases: ['등록번호','번호판','차량번호','plate','license plate'] },
+        { key: 'payment',      label: '결제방식',       required: false, type: 'text', aliases: ['결제방식','결제','구매방식','지불방식','payment','payment method'] },
+        { key: 'period',       label: '약정기간(개월)', required: false, type: 'number', aliases: ['약정기간','약정','기간','개월수','개월','period','term','months'] },
+        { key: 'insuranceEnd', label: '보험 만기일',   required: false, type: 'date', aliases: ['보험만기','보험만기일','만기일','자동차보험','insurance','insurance end','expiry'] },
+        { key: 'memo',         label: '메모',           required: false, type: 'text', aliases: ['메모','비고','특이사항','노트','참고','memo','note','notes','remarks'] }
+    ];
+
+    function normalizeHeader(s) {
+        return String(s || '').trim().toLowerCase().replace(/\s+/g, '').replace(/[()/\-_\.]/g, '');
+    }
+
+    // 헤더 배열을 받아 자동 매핑 객체 + 신뢰도 반환
+    function autoDetectMapping(headers) {
+        const mapping = {};
+        const used = new Set();
+        const reasons = {};
+        const normalized = headers.map(h => normalizeHeader(h));
+
+        FIELD_DEFS.forEach(field => {
+            // 1단계: 정확 매치
+            for (let i = 0; i < normalized.length; i++) {
+                if (used.has(i)) continue;
+                if (field.aliases.some(a => normalizeHeader(a) === normalized[i])) {
+                    mapping[field.key] = i;
+                    used.add(i);
+                    reasons[field.key] = 'exact';
+                    return;
+                }
+            }
+            // 2단계: 부분 매치 (포함)
+            for (let i = 0; i < normalized.length; i++) {
+                if (used.has(i)) continue;
+                if (!normalized[i]) continue;
+                if (field.aliases.some(a => {
+                    const na = normalizeHeader(a);
+                    return normalized[i].includes(na) || na.includes(normalized[i]);
+                })) {
+                    mapping[field.key] = i;
+                    used.add(i);
+                    reasons[field.key] = 'partial';
+                    return;
+                }
+            }
+        });
+
+        const totalRequired = FIELD_DEFS.filter(f => f.required).length;
+        const matchedRequired = FIELD_DEFS.filter(f => f.required && mapping[f.key] !== undefined).length;
+        const matchedTotal = Object.keys(mapping).length;
+        const confidence = Math.round((matchedTotal / FIELD_DEFS.length) * 100);
+        const requiredOk = matchedRequired === totalRequired;
+
+        return { mapping, confidence, requiredOk, reasons, matchedTotal, matchedRequired, totalRequired };
+    }
+
+    // 시트의 각 행을 분석하여 헤더 행을 추정 (텍스트 비율이 높고 빈 셀 적은 첫 행)
+    function guessHeaderRow(rows) {
+        for (let i = 0; i < Math.min(rows.length, 5); i++) {
+            const r = rows[i] || [];
+            const cells = r.filter(c => c !== '' && c !== null && c !== undefined);
+            if (cells.length < 3) continue;
+            const textCells = cells.filter(c => typeof c === 'string' || (typeof c === 'number' && isNaN(c))).length;
+            // 텍스트 비율이 60% 이상이고 셀이 3개 이상이면 헤더로 간주
+            if (textCells / cells.length >= 0.6) return i;
+        }
+        return 0;
+    }
+
+    // 파일 시그니처 (시트명 + 헤더 SHA-256 앞 12자) — 매핑 프로필 키
+    function getMappingSignature(sheetName, headers) {
+        const key = (sheetName || '') + '||' + headers.map(h => String(h || '').trim()).join('|');
+        return sha256Hex(key).substring(0, 12);
+    }
+
+    function getSavedMappings() {
+        try {
+            const raw = localStorage.getItem(LS_MAPPINGS);
+            if (raw) return JSON.parse(raw);
+        } catch(e) {}
+        return {};
+    }
+    function saveMappingProfile(signature, profile) {
+        const all = getSavedMappings();
+        all[signature] = Object.assign({ savedAt: new Date().toISOString() }, profile);
+        safeSetItem(LS_MAPPINGS, JSON.stringify(all));
+    }
+
+    // 매핑을 데이터 행에 적용 → customer 배열
+    function applyMapping(rows, dataStartIdx, mapping) {
+        const list = [];
+        for (let i = dataStartIdx; i < rows.length; i++) {
+            const r = rows[i] || [];
+            const get = (k) => mapping[k] !== undefined ? r[mapping[k]] : '';
+            const name = String(get('name') || '').trim();
+            if (!name) continue;
+            list.push({
+                name,
+                phone:        fmtPhone(get('phone')),
+                status:       String(get('status') || '').trim(),
+                grade:        String(get('grade') || '').trim(),
+                brand:        String(get('brand') || '').trim(),
+                car:          String(get('car') || '').trim(),
+                trim:         String(get('trim') || '').trim(),
+                region:       String(get('region') || '').trim(),
+                company:      String(get('company') || '').trim(),
+                firstDate:    fmtDate(get('firstDate')),
+                contractDate: fmtDate(get('contractDate')),
+                deliveryDate: fmtDate(get('deliveryDate')),
+                plate:        String(get('plate') || '').trim(),
+                payment:      String(get('payment') || '').trim(),
+                period:       (get('period') !== '' && get('period') !== undefined) ? String(get('period')).trim() : '',
+                insuranceEnd: fmtDate(get('insuranceEnd')),
+                memo:         String(get('memo') || '').trim()
+            });
+        }
+        return list;
+    }
 
     function fmtPhone(raw) {
         if (raw === null || raw === undefined) return '';
@@ -857,6 +2079,9 @@
     }
     function daysBetween(a, b) { return Math.floor((b - a) / 86400000); }
 
+    // V5.4 P1-6: 새 흐름 — 파싱 → 매핑 자동/수동 → 적용 → 저장
+    let pendingImport = null; // { fileName, wb, sheetNames, currentSheet, rows, headers, headerRowIdx, mapping }
+
     function loadCRMFile(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -865,48 +2090,24 @@
             try {
                 const data = new Uint8Array(e.target.result);
                 const wb = XLSX.read(data, {type: 'array', cellDates: true});
-                let sheetName = wb.SheetNames.find(n => n.includes('고객목록'));
-                if (!sheetName) {
-                    alert('이 파일에서 "고객목록" 시트를 찾지 못했습니다.');
+                if (!wb.SheetNames || wb.SheetNames.length === 0) {
+                    alert('읽을 수 있는 시트가 없습니다.');
                     return;
                 }
-                const ws = wb.Sheets[sheetName];
-                const rows = XLSX.utils.sheet_to_json(ws, {header: 1, range: 1, defval: ''});
-                if (rows.length < 2) { alert('고객 데이터가 비어 있습니다.'); return; }
-                const list = [];
-                for (let i = 1; i < rows.length; i++) {
-                    const r = rows[i];
-                    const name = (r[1] || '').toString().trim();
-                    if (!name) continue;
-                    list.push({
-                        name: name,
-                        phone: fmtPhone(r[2]),
-                        status: (r[3] || '').toString().trim(),
-                        grade: (r[4] || '').toString().trim(),
-                        brand: (r[6] || '').toString().trim(),
-                        car: (r[7] || '').toString().trim(),
-                        trim: (r[8] || '').toString().trim(),
-                        region: (r[10] || '').toString().trim(),
-                        company: (r[11] || '').toString().trim(),
-                        firstDate: fmtDate(r[12]),
-                        contractDate: fmtDate(r[15]),
-                        deliveryDate: fmtDate(r[16]),
-                        plate: (r[17] || '').toString().trim(),
-                        payment: (r[18] || '').toString().trim(),
-                        period: (r[19] !== '' ? r[19] : '').toString().trim(),
-                        insuranceEnd: fmtDate(r[20]),
-                        memo: (r[22] || '').toString().trim()
-                    });
-                }
-                customerList = list;
-                try {
-                    localStorage.setItem(LS_CRM, JSON.stringify(list));
-                    localStorage.setItem(LS_CRM_META, JSON.stringify({
-                        file: file.name, loadedAt: new Date().toISOString(), count: list.length
-                    }));
-                } catch(err) { console.warn(err); }
-                updateCRMStatus();
-                alert(`✅ 고객 ${list.length}명 로드 완료!\n\n파일: ${file.name}`);
+                // 시트 자동 선택 — "고객목록" 우선, 없으면 첫 번째
+                let sheetName = wb.SheetNames.find(n => n.includes('고객목록')) || wb.SheetNames[0];
+                pendingImport = {
+                    fileName: file.name,
+                    wb,
+                    sheetNames: wb.SheetNames.slice(),
+                    currentSheet: sheetName,
+                    rows: null,
+                    headers: [],
+                    headerRowIdx: 0,
+                    mapping: {}
+                };
+                analyzePendingSheet();
+                routePendingImport();
             } catch (err) {
                 console.error(err);
                 alert('파일 읽기 실패: ' + err.message);
@@ -914,6 +2115,229 @@
         };
         reader.readAsArrayBuffer(file);
         event.target.value = '';
+    }
+
+    // 현재 시트를 분석하여 pendingImport에 rows/headers/mapping 채움
+    function analyzePendingSheet() {
+        if (!pendingImport) return;
+        const ws = pendingImport.wb.Sheets[pendingImport.currentSheet];
+        const rows = XLSX.utils.sheet_to_json(ws, {header: 1, defval: ''});
+        pendingImport.rows = rows;
+        pendingImport.headerRowIdx = guessHeaderRow(rows);
+        pendingImport.headers = (rows[pendingImport.headerRowIdx] || []).map(h => String(h || ''));
+        const auto = autoDetectMapping(pendingImport.headers);
+        pendingImport.mapping = auto.mapping;
+        pendingImport.autoResult = auto;
+        pendingImport.signature = getMappingSignature(pendingImport.currentSheet, pendingImport.headers);
+        // 저장된 프로필 우선
+        const saved = getSavedMappings()[pendingImport.signature];
+        if (saved && saved.mapping) {
+            pendingImport.mapping = saved.mapping;
+            pendingImport.headerRowIdx = (saved.headerRowIdx !== undefined) ? saved.headerRowIdx : pendingImport.headerRowIdx;
+            pendingImport.fromSavedProfile = true;
+        } else {
+            pendingImport.fromSavedProfile = false;
+        }
+    }
+
+    // 매핑 상태에 따라 즉시 로드 vs 모달 표시
+    function routePendingImport() {
+        if (!pendingImport) return;
+        // 1. 저장된 프로필 자동 적용 → 즉시 로드
+        if (pendingImport.fromSavedProfile) {
+            finalizeImport(false);
+            return;
+        }
+        const r = pendingImport.autoResult;
+        // 2. 필수 필드(name, phone) 매핑 성공 + 신뢰도 ≥ 50% → 즉시 로드
+        if (r.requiredOk && r.confidence >= 50) {
+            finalizeImport(false);
+            return;
+        }
+        // 3. 그 외 → 매핑 모달
+        openMappingModal();
+    }
+
+    function finalizeImport(fromModal) {
+        if (!pendingImport) return;
+        // 데이터 시작 행 = 헤더 다음 행
+        const dataStart = pendingImport.headerRowIdx + 1;
+        const list = applyMapping(pendingImport.rows, dataStart, pendingImport.mapping);
+        if (list.length === 0) {
+            alert('매핑된 컬럼에서 유효한 고객 데이터를 찾지 못했습니다.\n매핑을 다시 확인해 주세요.');
+            if (!fromModal) openMappingModal();
+            return;
+        }
+        customerList = list;
+        // V5.4 P1-10: 안전 저장 — quota 초과 시 사용자에게 명확한 알림
+        const crmOk = safeSetItem(LS_CRM, JSON.stringify(list));
+        safeSetItem(LS_CRM_META, JSON.stringify({
+            file: pendingImport.fileName,
+            sheet: pendingImport.currentSheet,
+            loadedAt: new Date().toISOString(),
+            count: list.length,
+            signature: pendingImport.signature
+        }));
+        // 매핑 프로필 저장 (시트명+헤더 시그니처별)
+        saveMappingProfile(pendingImport.signature, {
+            fileName: pendingImport.fileName,
+            sheetName: pendingImport.currentSheet,
+            headers: pendingImport.headers,
+            headerRowIdx: pendingImport.headerRowIdx,
+            mapping: pendingImport.mapping
+        });
+        if (!crmOk) {
+            // 저장 실패 시에도 메모리 안의 customerList는 살아 있으므로 세션 내 사용은 가능
+            console.warn('[CRM] 저장 실패 — 새로고침 시 데이터 손실 가능. 백업 권장.');
+        }
+        updateCRMStatus();
+        const closingMappingModal = fromModal ? document.getElementById('mappingModal') : null;
+        if (closingMappingModal) closingMappingModal.classList.remove('show');
+        const sourceLabel = pendingImport.fromSavedProfile ? '저장된 매핑 자동 적용' : (fromModal ? '수동 매핑 적용' : '자동 감지');
+        alert(`✅ 고객 ${list.length}명 로드 완료!\n\n파일: ${pendingImport.fileName}\n시트: ${pendingImport.currentSheet}\n방식: ${sourceLabel}`);
+        pendingImport = null;
+    }
+
+    // ==================== V5.4 P1-6: 매핑 모달 UI ====================
+    function openMappingModal() {
+        if (!pendingImport) return;
+        // 시트 선택 드롭다운
+        const sheetSel = document.getElementById('mapSheetSel');
+        sheetSel.innerHTML = pendingImport.sheetNames.map(n =>
+            `<option value="${escapeHtml(n)}"${n === pendingImport.currentSheet ? ' selected':''}>${escapeHtml(n)}</option>`
+        ).join('');
+        renderHeaderRowOptions();
+        renderFieldGrid();
+        updateMapStatus();
+        document.getElementById('mapPreview').innerHTML = '<div class="preview-empty">미리보기 — [미리보기] 버튼을 누르세요</div>';
+        document.getElementById('mappingModal').classList.add('show');
+    }
+
+    function renderHeaderRowOptions() {
+        const sel = document.getElementById('mapHeaderRowSel');
+        const rows = pendingImport.rows || [];
+        const opts = [];
+        for (let i = 0; i < Math.min(rows.length, 8); i++) {
+            const preview = (rows[i] || []).slice(0, 5).map(c => String(c || '').substring(0, 10)).join(' / ');
+            opts.push(`<option value="${i}"${i === pendingImport.headerRowIdx ? ' selected':''}>${i+1}행 — ${escapeHtml(preview)}</option>`);
+        }
+        sel.innerHTML = opts.join('');
+    }
+
+    function onMapSheetChange() {
+        const sel = document.getElementById('mapSheetSel');
+        pendingImport.currentSheet = sel.value;
+        analyzePendingSheet();
+        // 저장 프로필 자동 적용은 routePendingImport에서 처리하지만 모달 안에서는 일단 폼만 갱신
+        renderHeaderRowOptions();
+        renderFieldGrid();
+        updateMapStatus();
+    }
+
+    function onMapHeaderRowChange() {
+        const v = parseInt(document.getElementById('mapHeaderRowSel').value, 10);
+        pendingImport.headerRowIdx = isNaN(v) ? 0 : v;
+        pendingImport.headers = (pendingImport.rows[pendingImport.headerRowIdx] || []).map(h => String(h || ''));
+        const auto = autoDetectMapping(pendingImport.headers);
+        pendingImport.mapping = auto.mapping;
+        pendingImport.autoResult = auto;
+        pendingImport.signature = getMappingSignature(pendingImport.currentSheet, pendingImport.headers);
+        renderFieldGrid();
+        updateMapStatus();
+    }
+
+    function renderFieldGrid() {
+        const grid = document.getElementById('mapFieldsGrid');
+        const headers = pendingImport.headers || [];
+        // 컬럼 옵션: -- 없음 -- + 각 헤더(인덱스)
+        const colOpts = ['<option value="">-- 사용 안 함 --</option>'].concat(
+            headers.map((h, i) => `<option value="${i}">${i+1}열: ${escapeHtml(String(h || '(빈 헤더)').substring(0, 30))}</option>`)
+        ).join('');
+
+        const reasons = (pendingImport.autoResult && pendingImport.autoResult.reasons) || {};
+
+        grid.innerHTML = FIELD_DEFS.map(f => {
+            const current = pendingImport.mapping[f.key];
+            const matched = current !== undefined;
+            const cls = matched && reasons[f.key] ? 'auto-matched' : (f.required && !matched ? 'required-unset' : '');
+            const req = f.required ? '<span class="req">*</span>' : '';
+            const selectId = `mapSel_${f.key}`;
+            // 명시적으로 selected를 부여 (현재 매핑된 인덱스 또는 "사용 안 함")
+            const fieldOpts = (['<option value=""' + (matched ? '' : ' selected') + '>-- 사용 안 함 --</option>']).concat(
+                headers.map((h, i) => `<option value="${i}"${current === i ? ' selected' : ''}>${i+1}열: ${escapeHtml(String(h || '(빈 헤더)').substring(0, 30))}</option>`)
+            ).join('');
+            return `<div class="map-field">
+                <div class="map-label" title="${escapeHtml(f.aliases.join(', '))}">${escapeHtml(f.label)}${req}</div>
+                <select id="${selectId}" class="${cls}" onchange="onFieldMapChange('${f.key}')">${fieldOpts}</select>
+            </div>`;
+        }).join('');
+    }
+
+    function onFieldMapChange(fieldKey) {
+        const sel = document.getElementById('mapSel_' + fieldKey);
+        const v = sel.value;
+        if (v === '' || v === '__NONE__') {
+            delete pendingImport.mapping[fieldKey];
+        } else {
+            pendingImport.mapping[fieldKey] = parseInt(v, 10);
+        }
+        updateMapStatus();
+        // 시각 업데이트
+        const field = FIELD_DEFS.find(f => f.key === fieldKey);
+        sel.className = '';
+        if (pendingImport.mapping[fieldKey] !== undefined) {
+            sel.classList.add('auto-matched');
+        } else if (field && field.required) {
+            sel.classList.add('required-unset');
+        }
+    }
+
+    function updateMapStatus() {
+        const el = document.getElementById('mapStatus');
+        const btn = document.getElementById('btnMapConfirm');
+        const required = FIELD_DEFS.filter(f => f.required);
+        const missing = required.filter(f => pendingImport.mapping[f.key] === undefined);
+        const matched = Object.keys(pendingImport.mapping).length;
+        if (missing.length > 0) {
+            el.className = 'map-status warn';
+            el.innerHTML = `⚠ <b>필수 항목 미설정:</b> ${missing.map(f => f.label).join(', ')} — 이 항목들을 매핑하셔야 가져올 수 있습니다.`;
+            btn.disabled = true;
+        } else {
+            el.className = 'map-status ok';
+            el.innerHTML = `✅ 필수 항목 모두 매핑 완료. 총 <b>${matched}/${FIELD_DEFS.length}</b>개 컬럼이 인식되었습니다.`;
+            btn.disabled = false;
+        }
+    }
+
+    function previewMapping() {
+        const required = FIELD_DEFS.filter(f => f.required);
+        const missing = required.filter(f => pendingImport.mapping[f.key] === undefined);
+        if (missing.length > 0) {
+            alert('필수 항목을 먼저 매핑해 주세요: ' + missing.map(f => f.label).join(', '));
+            return;
+        }
+        const dataStart = pendingImport.headerRowIdx + 1;
+        const sample = applyMapping((pendingImport.rows || []).slice(0, dataStart + 5), dataStart, pendingImport.mapping);
+        const target = document.getElementById('mapPreview');
+        if (sample.length === 0) {
+            target.innerHTML = '<div class="preview-empty">⚠ 매핑된 컬럼에서 데이터를 추출하지 못했습니다. 헤더 행 위치를 확인해 주세요.</div>';
+            return;
+        }
+        const cols = ['name','phone','brand','car','status','deliveryDate','plate','memo'];
+        const labels = cols.map(c => (FIELD_DEFS.find(f => f.key === c) || {label:c}).label);
+        target.innerHTML = `<table>
+            <thead><tr>${labels.map(l => `<th>${escapeHtml(l)}</th>`).join('')}</tr></thead>
+            <tbody>${sample.map(c => `<tr>${cols.map(k => `<td>${escapeHtml(c[k] || '-')}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>`;
+    }
+
+    function confirmMapping() {
+        finalizeImport(true);
+    }
+
+    function cancelMapping() {
+        document.getElementById('mappingModal').classList.remove('show');
+        pendingImport = null;
     }
     function updateCRMStatus() {
         const status = document.getElementById('crmStatus');
@@ -927,15 +2351,25 @@
             status.textContent = '미연결';
         }
         renderVarChips();
+        updateStorageBadge(); // V5.4 P1-10: 저장소 상태도 함께 갱신
     }
     function clearCRM() {
-        if (!confirm('CRM 데이터를 모두 비울까요?')) return;
+        // 매핑 프로필도 함께 비울지 묻기
+        const hasMappings = Object.keys(getSavedMappings()).length > 0;
+        let msg = 'CRM 데이터를 모두 비울까요?';
+        if (hasMappings) {
+            msg += '\n\n[취소] 데이터만 유지하고 매핑은 그대로\n[확인] 데이터 비우기 (매핑 프로필은 별도 확인)';
+        }
+        if (!confirm(msg)) return;
         customerList = [];
         localStorage.removeItem(LS_CRM);
         localStorage.removeItem(LS_CRM_META);
         document.getElementById('customerSearch').value = '';
         document.getElementById('autoComplete').style.display = 'none';
         clearSelected();
+        if (hasMappings && confirm('저장된 컬럼 매핑 프로필(' + Object.keys(getSavedMappings()).length + '개)도 함께 삭제할까요?\n\n[확인] 매핑까지 모두 삭제 → 다음 엑셀 로드 시 매핑 모달이 다시 표시됩니다.\n[취소] 매핑은 유지 (다음에 같은 형식 파일이면 자동 적용)')) {
+            localStorage.removeItem(LS_MAPPINGS);
+        }
         updateCRMStatus();
     }
     function searchCustomer() {
@@ -952,8 +2386,7 @@
             ac.style.display = 'block'; return;
         }
         ac.innerHTML = matches.map(c => {
-            const brandBadge = c.brand === '포드' ? '<span class="ac-badge badge-ford">F</span>' :
-                               c.brand === '링컨' ? '<span class="ac-badge badge-lincoln">L</span>' : '';
+            const brandBadge = renderBrandBadge(c.brand);
             const statusBadge = c.status === '출고완료' ? '<span class="ac-badge badge-out">출고</span>' :
                                 c.status === '잠재' ? '<span class="ac-badge badge-potential">잠재</span>' : '';
             return `<div class="ac-item" onclick="selectCustomer(${customerList.indexOf(c)})">
@@ -965,6 +2398,35 @@
     }
     function escapeHtml(s) {
         return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    // V5.4 화이트라벨: 14개 브랜드 인식 (국산·수입 + 영문/한글 양쪽)
+    const BRAND_MAP = [
+        { keys: ['포드','ford'],         cls: 'badge-ford',     short: 'Ford' },
+        { keys: ['링컨','lincoln'],      cls: 'badge-lincoln',  short: 'Lincoln' },
+        { keys: ['현대','hyundai'],      cls: 'badge-hyundai',  short: '현대' },
+        { keys: ['기아','kia'],          cls: 'badge-kia',      short: '기아' },
+        { keys: ['제네시스','genesis'],  cls: 'badge-genesis',  short: 'GV' },
+        { keys: ['르노','renault'],      cls: 'badge-renault',  short: '르노' },
+        { keys: ['kg','쌍용'],           cls: 'badge-kg',       short: 'KGM' },
+        { keys: ['쉐보레','gm','chevy','chevrolet'], cls: 'badge-chevy', short: 'GM' },
+        { keys: ['bmw','비엠'],          cls: 'badge-bmw',      short: 'BMW' },
+        { keys: ['벤츠','benz','메르세데스'], cls: 'badge-benz', short: 'MB' },
+        { keys: ['아우디','audi'],       cls: 'badge-audi',     short: 'Audi' },
+        { keys: ['포르쉐','porsche'],    cls: 'badge-porsche',  short: 'P' },
+        { keys: ['볼보','volvo'],        cls: 'badge-volvo',    short: 'Volvo' },
+        { keys: ['지커','zeekr'],        cls: 'badge-zeekr',    short: 'Zeekr' },
+        { keys: ['테슬라','tesla'],      cls: 'badge-tesla',    short: 'T' },
+        { keys: ['렉서스','lexus'],      cls: 'badge-lexus',    short: 'Lexus' },
+        { keys: ['도요타','토요타','toyota'], cls: 'badge-toyota', short: 'Toy' }
+    ];
+    function renderBrandBadge(brand) {
+        if (!brand) return '';
+        const b = String(brand).trim().toLowerCase();
+        const hit = BRAND_MAP.find(m => m.keys.some(k => b.includes(k)));
+        if (hit) return `<span class="ac-badge ${hit.cls}">${hit.short}</span>`;
+        // 미등록 브랜드도 깔끔하게 표시 (회색 배지)
+        return `<span class="ac-badge badge-generic">${escapeHtml(brand.slice(0,4))}</span>`;
     }
     function selectCustomer(idx) {
         const c = customerList[idx];
@@ -1009,6 +2471,15 @@
         const car = document.getElementById('carModel').value.trim();
         if (name) map['[고객명]'] = name;
         if (car) map['[차종]'] = car;
+
+        // V5.4 프로필 변수 자동 주입
+        const pf = getProfile();
+        if (pf.name)     map['[딜러명]']    = pf.name;
+        if (pf.title)    map['[직급]']      = pf.title;
+        if (pf.company)  map['[딜러사명]']  = pf.company;
+        if (pf.showroom) map['[전시장명]']  = pf.showroom;
+        if (pf.phone)    map['[딜러연락처]'] = pf.phone;
+        if (pf.address)  map['[전시장주소]'] = pf.address;
 
         const today = new Date();
         const yy = today.getFullYear(), mm = String(today.getMonth()+1).padStart(2,'0'), dd = String(today.getDate()).padStart(2,'0');
@@ -1065,6 +2536,7 @@
             document.getElementById(containerId).innerHTML = html;
         };
         make(VAR_DEFS.basic, 'varChipsBasic');
+        make(VAR_DEFS.manual, 'varChipsManual');
         make(VAR_DEFS.customer, 'varChipsCustomer');
         make(VAR_DEFS.contract, 'varChipsContract');
         make(VAR_DEFS.auto, 'varChipsAuto');
@@ -1128,8 +2600,12 @@
 
     // ==================== 기존 기능 ====================
     window.onload = function() {
-        const savedSig = localStorage.getItem(LS_SIG);
-        if (savedSig) document.getElementById('mySignature').value = savedSig;
+        loadProfile(); // V5.4: 프로필 먼저 로드 (테마색·변수 채움)
+        migrateLegacySignature(); // V5.4 P1-7: 기존 단일 서명 → 다중 서명 마이그레이션
+        renderSignatureSelect();  // 서명 드롭다운 채우기 + 현재 본문 로드
+        applyDynamicManifest();   // V5.4 P1-8: file:// 호환 동적 manifest 주입
+        updateInstallButton();    // 설치 버튼 노출 여부 결정
+        updateStorageBadge();     // V5.4 P1-10: 저장소 사용량 초기 표시
         try {
             const cached = localStorage.getItem(LS_CRM);
             if (cached) customerList = JSON.parse(cached);
@@ -1139,11 +2615,673 @@
         document.getElementById('customerName').addEventListener('input', renderVarChips);
         document.getElementById('carModel').addEventListener('input', renderVarChips);
         updateTplActions();
+        // V5.4: 동의 상태 점검 + 첫 실행 시 동의 모달 자동 표시
+        updateConsentStatus();
+        updateLicenseStatus();
+        if (!hasConsented()) {
+            openConsent(false);
+            return; // 동의 먼저, 라이선스는 동의 후 acceptConsent에서 체크
+        }
+        // 동의 완료 — 라이선스 점검
+        if (!enforceLicense()) return; // 만료된 경우 잠금 화면
+        const s = getLicenseStatus();
+        if (s.status === 'none') openLicenseModal(false);
     };
 
-    function saveSignature() {
-        localStorage.setItem(LS_SIG, document.getElementById('mySignature').value);
+    // ==================== V5.4 P1-7: 다중 서명 프리셋 시스템 ====================
+    const LS_SIGNATURES = 'sales_king_signatures_v54';
+    const LS_CURRENT_SIG = 'sales_king_current_sig_v54';
+    const DEFAULT_SIGNATURES = [
+        { id: 'sig_default_official', name: '공식',   body: '[딜러사명]\n[전시장명] [딜러명] [직급] 드림\n📞 [딜러연락처]' },
+        { id: 'sig_default_friendly', name: '친근',   body: '[딜러명] [직급]\n언제든 편하게 연락 주세요 😊\n[딜러연락처]' },
+        { id: 'sig_default_business', name: '사업자', body: '[딜러사명] [전시장명]\n사업자 차량 전문 [직급] [딜러명]\n📞 [딜러연락처]\n📍 [전시장주소]' }
+    ];
+
+    function getSignatures() {
+        try {
+            const raw = localStorage.getItem(LS_SIGNATURES);
+            if (raw) {
+                const arr = JSON.parse(raw);
+                if (Array.isArray(arr) && arr.length > 0) return arr;
+            }
+        } catch(e) {}
+        // 최초 진입 — 기본 3종 반환
+        return DEFAULT_SIGNATURES.slice();
     }
+    function saveSignatures(arr) {
+        safeSetItem(LS_SIGNATURES, JSON.stringify(arr));
+    }
+    function getCurrentSigId() {
+        return localStorage.getItem(LS_CURRENT_SIG) || '';
+    }
+    function setCurrentSigId(id) {
+        safeSetItem(LS_CURRENT_SIG, id);
+    }
+
+    // 기존 V5.3 단일 서명 → V5.4 다중 서명으로 마이그레이션
+    function migrateLegacySignature() {
+        const legacy = localStorage.getItem(LS_SIG);
+        if (!legacy) return;
+        // 이미 V5.4 서명 배열이 있다면 마이그레이션 불필요
+        if (localStorage.getItem(LS_SIGNATURES)) return;
+        const sigs = DEFAULT_SIGNATURES.slice();
+        // legacy 내용을 첫 항목 "내 기본"으로 추가
+        sigs.unshift({ id: 'sig_legacy_migrated', name: '내 기존 서명', body: legacy });
+        saveSignatures(sigs);
+        setCurrentSigId('sig_legacy_migrated');
+        // 기존 LS_SIG는 호환을 위해 남겨둠 (덮어쓰지 않음 — 다음 V5.4 saveSig가 그 자리에 마지막 동기화 본문 저장)
+    }
+
+    function renderSignatureSelect() {
+        const sel = document.getElementById('sigSelect');
+        if (!sel) return;
+        const sigs = getSignatures();
+        const curId = getCurrentSigId();
+        sel.innerHTML = sigs.map(s =>
+            `<option value="${escapeHtml(s.id)}"${s.id === curId ? ' selected' : ''}>${escapeHtml(s.name)}</option>`
+        ).join('');
+        // 현재 선택 ID 없거나 무효면 첫 항목으로
+        if (!curId || !sigs.find(s => s.id === curId)) {
+            setCurrentSigId(sigs[0].id);
+            sel.value = sigs[0].id;
+        }
+        loadCurrentSignatureBody();
+    }
+
+    function loadCurrentSignatureBody() {
+        const sigs = getSignatures();
+        const curId = getCurrentSigId();
+        const cur = sigs.find(s => s.id === curId) || sigs[0];
+        document.getElementById('mySignature').value = cur ? cur.body : '';
+    }
+
+    function onSignatureSelect() {
+        const newId = document.getElementById('sigSelect').value;
+        setCurrentSigId(newId);
+        loadCurrentSignatureBody();
+    }
+
+    function saveCurrentSignatureBody() {
+        const sigs = getSignatures();
+        const curId = getCurrentSigId();
+        const body = document.getElementById('mySignature').value;
+        const idx = sigs.findIndex(s => s.id === curId);
+        if (idx >= 0) {
+            sigs[idx].body = body;
+            saveSignatures(sigs);
+        }
+        // V5.3 호환: LS_SIG 현재 본문 동기화
+        safeSetItem(LS_SIG, body);
+    }
+
+    function addNewSignature() {
+        const name = prompt('새 서명 이름 (예: 출고완료, 명절, 보험만기 등):', '');
+        if (!name || !name.trim()) return;
+        const sigs = getSignatures();
+        const newSig = {
+            id: 'sig_user_' + Date.now(),
+            name: name.trim(),
+            body: '안녕하세요 [고객명] 고객님.\n\n[딜러사명]\n[딜러명] [직급] 드림'
+        };
+        sigs.push(newSig);
+        saveSignatures(sigs);
+        setCurrentSigId(newSig.id);
+        renderSignatureSelect();
+        document.getElementById('mySignature').focus();
+    }
+
+    function renameCurrentSignature() {
+        const sigs = getSignatures();
+        const curId = getCurrentSigId();
+        const cur = sigs.find(s => s.id === curId);
+        if (!cur) return;
+        const newName = prompt('서명 이름 변경:', cur.name);
+        if (!newName || !newName.trim()) return;
+        cur.name = newName.trim();
+        saveSignatures(sigs);
+        renderSignatureSelect();
+    }
+
+    function deleteCurrentSignature() {
+        const sigs = getSignatures();
+        if (sigs.length <= 1) {
+            alert('마지막 서명은 삭제할 수 없습니다. 새 서명을 추가한 후 삭제해 주세요.');
+            return;
+        }
+        const curId = getCurrentSigId();
+        const cur = sigs.find(s => s.id === curId);
+        if (!cur) return;
+        if (!confirm(`"${cur.name}" 서명을 삭제할까요?\n이 작업은 되돌릴 수 없습니다.`)) return;
+        const filtered = sigs.filter(s => s.id !== curId);
+        saveSignatures(filtered);
+        setCurrentSigId(filtered[0].id);
+        renderSignatureSelect();
+    }
+
+    // ==================== V5.4 P1-7: 통합 설정 백업/복원 ====================
+    function exportAllSettings() {
+        const bundle = {
+            type: 'sales_king_full_backup',
+            version: '5.4',
+            exportedAt: new Date().toISOString(),
+            profile:    JSON.parse(localStorage.getItem(LS_PROFILE) || 'null'),
+            signatures: JSON.parse(localStorage.getItem(LS_SIGNATURES) || 'null'),
+            currentSig: localStorage.getItem(LS_CURRENT_SIG) || null,
+            templates:  JSON.parse(localStorage.getItem(LS_USER_TPL) || 'null'),
+            mappings:   JSON.parse(localStorage.getItem(LS_MAPPINGS) || 'null')
+            // 라이선스·동의·CRM 데이터는 단말별·법적 무결성 사유로 제외
+        };
+        const blob = new Blob([JSON.stringify(bundle, null, 2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const today = new Date().toISOString().slice(0,10);
+        a.href = url;
+        a.download = `판매왕문자_전체설정_${today}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert('✅ 전체 설정 백업 완료!\n\n포함 항목: 프로필 · 서명 · 사용자 템플릿 · CRM 컬럼 매핑\n제외 항목: 라이선스 · 동의 기록 · CRM 고객 데이터 (단말별)');
+    }
+
+    function importAllSettings(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const bundle = JSON.parse(e.target.result);
+                if (bundle.type !== 'sales_king_full_backup') {
+                    throw new Error('판매왕문자 전체 설정 백업 파일이 아닙니다.');
+                }
+                const ok = confirm('현재 단말의 다음 항목을 가져온 데이터로 덮어씁니다 (병합 아님):\n\n• 프로필 (이름·회사·테마색)\n• 서명 프리셋 전체\n• 사용자 추가/수정 템플릿\n• CRM 컬럼 매핑 프로필\n\n계속하시겠습니까?');
+                if (!ok) return;
+                if (bundle.profile)    localStorage.setItem(LS_PROFILE,    JSON.stringify(bundle.profile));
+                if (bundle.signatures) localStorage.setItem(LS_SIGNATURES, JSON.stringify(bundle.signatures));
+                if (bundle.currentSig) localStorage.setItem(LS_CURRENT_SIG, bundle.currentSig);
+                if (bundle.templates)  localStorage.setItem(LS_USER_TPL,   JSON.stringify(bundle.templates));
+                if (bundle.mappings)   localStorage.setItem(LS_MAPPINGS,   JSON.stringify(bundle.mappings));
+                alert('✅ 복원 완료! 변경 사항 적용을 위해 페이지를 새로고침합니다.');
+                location.reload();
+            } catch(err) {
+                alert('복원 실패: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    // ==================== V5.4: 사용자 프로필 (화이트라벨) ====================
+    const DEFAULT_THEME = '#003499';
+    const DEFAULT_THEME_DEEP = '#002673';
+
+    function getProfile() {
+        try {
+            const raw = localStorage.getItem(LS_PROFILE);
+            if (raw) return JSON.parse(raw);
+        } catch(e) { console.warn(e); }
+        return { name:'', title:'', company:'', showroom:'', phone:'', address:'', color: DEFAULT_THEME };
+    }
+
+    function saveProfile() {
+        const pf = {
+            name:     document.getElementById('pfName').value.trim(),
+            title:    document.getElementById('pfTitle').value.trim(),
+            company:  document.getElementById('pfCompany').value.trim(),
+            showroom: document.getElementById('pfShowroom').value.trim(),
+            phone:    document.getElementById('pfPhone').value.trim(),
+            address:  document.getElementById('pfAddress').value.trim(),
+            color:    document.getElementById('pfColor').value || DEFAULT_THEME
+        };
+        safeSetItem(LS_PROFILE, JSON.stringify(pf));
+        applyThemeColor(pf.color);
+        updateProfileStatus(pf);
+        updateAppBranding(pf);
+        renderVarChips();
+    }
+
+    function loadProfile() {
+        const pf = getProfile();
+        document.getElementById('pfName').value     = pf.name || '';
+        document.getElementById('pfTitle').value    = pf.title || '';
+        document.getElementById('pfCompany').value  = pf.company || '';
+        document.getElementById('pfShowroom').value = pf.showroom || '';
+        document.getElementById('pfPhone').value    = pf.phone || '';
+        document.getElementById('pfAddress').value  = pf.address || '';
+        document.getElementById('pfColor').value    = pf.color || DEFAULT_THEME;
+        applyThemeColor(pf.color || DEFAULT_THEME);
+        updateProfileStatus(pf);
+        updateAppBranding(pf);
+        // 첫 실행 시 자동 펼침
+        if (!pf.name && !pf.company) {
+            document.getElementById('profileContent').classList.add('open');
+            document.getElementById('profileToggleIcon').textContent = '▲';
+        }
+    }
+
+    function updateProfileStatus(pf) {
+        const s = document.getElementById('profileStatus');
+        if (pf.name && pf.company) {
+            s.textContent = `✓ ${pf.name}`;
+            s.style.color = 'var(--ok)';
+        } else {
+            s.textContent = '⚠ 미설정';
+            s.style.color = '#c33';
+        }
+    }
+
+    function updateAppBranding(pf) {
+        const brandingEl = document.getElementById('appBranding');
+        if (brandingEl) {
+            brandingEl.textContent = pf.company || pf.name || '화이트라벨';
+        }
+        // PWA 메타·아이콘 동적 갱신
+        const color = pf.color || DEFAULT_THEME;
+        const themeMeta = document.getElementById('metaThemeColor');
+        if (themeMeta) themeMeta.setAttribute('content', color);
+        // 앱 이름 (홈화면 추가 시 표시)
+        const appName = (pf.company && pf.company.slice(0, 12)) || '판매왕문자';
+        const m1 = document.getElementById('metaAppleTitle');
+        const m2 = document.getElementById('metaAppName');
+        if (m1) m1.setAttribute('content', appName);
+        if (m2) m2.setAttribute('content', appName);
+        // 아이콘 — 사용자 색상 + 회사 첫 글자
+        const initial = (pf.company || pf.name || '판').trim().charAt(0) || '판';
+        const colorEnc = color.replace('#','%23');
+        const svgIcon = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><rect width='256' height='256' rx='48' fill='${colorEnc}'/><text x='50%25' y='58%25' font-size='150' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='800'>${initial}</text></svg>`;
+        const ati = document.getElementById('appleTouchIcon');
+        const fav = document.getElementById('favIcon');
+        if (ati) ati.setAttribute('href', svgIcon);
+        if (fav) fav.setAttribute('href', svgIcon);
+        // 페이지 타이틀
+        document.title = `${appName} · 문자 생성기 v5.4`;
+        // V5.4 P1-8: 동적 manifest도 함께 갱신 (file:// 환경)
+        if (typeof applyDynamicManifest === 'function') applyDynamicManifest();
+    }
+
+    // HEX → 더 어두운 HEX (약 25% 감산)
+    function darkenHex(hex) {
+        try {
+            const c = hex.replace('#','');
+            const r = parseInt(c.substr(0,2),16);
+            const g = parseInt(c.substr(2,2),16);
+            const b = parseInt(c.substr(4,2),16);
+            const d = (v) => Math.max(0, Math.floor(v * 0.75));
+            return '#' + [d(r),d(g),d(b)].map(v => v.toString(16).padStart(2,'0')).join('');
+        } catch(e) { return DEFAULT_THEME_DEEP; }
+    }
+
+    function applyThemeColor(hex) {
+        document.documentElement.style.setProperty('--brand-primary', hex);
+        document.documentElement.style.setProperty('--brand-deep', darkenHex(hex));
+    }
+
+    function resetThemeColor() {
+        document.getElementById('pfColor').value = DEFAULT_THEME;
+        saveProfile();
+    }
+
+    function toggleProfile() {
+        const c = document.getElementById('profileContent');
+        const i = document.getElementById('profileToggleIcon');
+        const open = c.classList.toggle('open');
+        i.textContent = open ? '▲' : '▼';
+    }
+
+    // ==================== V5.4: 법적 고지 동의 시스템 ====================
+    function hasConsented() {
+        try {
+            const raw = localStorage.getItem(LS_CONSENT);
+            if (!raw) return false;
+            const data = JSON.parse(raw);
+            // 버전이 바뀌면 재동의 필요
+            return data.version === CONSENT_VERSION && data.privacy === true && data.terms === true;
+        } catch(e) { return false; }
+    }
+
+    function openConsent(forceShow) {
+        // forceShow=true면 재열람(이미 동의했어도 열림)
+        const consented = hasConsented();
+        if (consented && !forceShow) return;
+        const modal = document.getElementById('consentModal');
+        modal.classList.add('show');
+        // 첫 섹션 자동 펼침
+        const first = document.getElementById('legalPrivacy');
+        if (first && !first.classList.contains('open')) {
+            first.classList.add('open');
+            const arrow = first.querySelector('.legal-arrow');
+            if (arrow) arrow.textContent = '▲';
+        }
+        // 이미 동의한 경우 체크박스 미리 체크 + 버튼 활성화
+        if (consented) {
+            document.getElementById('agreePrivacy').checked = true;
+            document.getElementById('agreeTerms').checked = true;
+            updateAcceptBtn();
+        } else {
+            document.getElementById('agreePrivacy').checked = false;
+            document.getElementById('agreeTerms').checked = false;
+            updateAcceptBtn();
+        }
+    }
+
+    function toggleLegalSection(id) {
+        const sec = document.getElementById(id);
+        if (!sec) return;
+        const open = sec.classList.toggle('open');
+        const arrow = sec.querySelector('.legal-arrow');
+        if (arrow) arrow.textContent = open ? '▲' : '▼';
+    }
+
+    function updateAcceptBtn() {
+        const a = document.getElementById('agreePrivacy').checked;
+        const b = document.getElementById('agreeTerms').checked;
+        document.getElementById('btnAcceptConsent').disabled = !(a && b);
+    }
+
+    function acceptConsent() {
+        const a = document.getElementById('agreePrivacy').checked;
+        const b = document.getElementById('agreeTerms').checked;
+        if (!a || !b) {
+            alert('두 항목 모두 동의해 주셔야 사용이 가능합니다.');
+            return;
+        }
+        const record = {
+            version: CONSENT_VERSION,
+            privacy: true,
+            terms: true,
+            timestamp: new Date().toISOString()
+        };
+        try {
+            localStorage.setItem(LS_CONSENT, JSON.stringify(record));
+        } catch(e) {
+            alert('동의 기록 저장에 실패했습니다. 브라우저 저장 공간을 확인해 주세요.');
+            return;
+        }
+        document.getElementById('consentModal').classList.remove('show');
+        updateConsentStatus();
+        // 동의 후 라이선스 점검
+        if (!enforceLicense()) return;
+        const s = getLicenseStatus();
+        if (s.status === 'none') openLicenseModal(false);
+    }
+
+    function declineConsent() {
+        const ok = confirm('동의하지 않으시면 본 도구를 사용하실 수 없습니다.\n페이지를 닫아주십시오.\n\n그래도 진행하시겠습니까?');
+        if (!ok) return;
+        // 거부 시 화면 가림 + 안내
+        document.body.innerHTML = '<div style="max-width:480px;margin:80px auto;padding:30px;text-align:center;font-family:-apple-system,sans-serif;color:#333;line-height:1.7;">'
+            + '<h2 style="color:#c33;font-size:20px;margin-bottom:14px;">사용이 중지되었습니다</h2>'
+            + '<p>개인정보 처리방침 및 이용약관에 동의하지 않으셨습니다.</p>'
+            + '<p style="font-size:13px;color:#777;margin-top:20px;">다시 사용하시려면 페이지를 새로고침(F5)해 주십시오.</p>'
+            + '<button onclick="location.reload()" style="margin-top:20px;padding:10px 22px;background:#003499;color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer;">새로고침</button>'
+            + '</div>';
+    }
+
+    function updateConsentStatus() {
+        const el = document.getElementById('consentStatus');
+        if (!el) return;
+        if (hasConsented()) {
+            try {
+                const data = JSON.parse(localStorage.getItem(LS_CONSENT));
+                const date = new Date(data.timestamp).toLocaleDateString('ko-KR');
+                el.textContent = `✓ ${date} 동의함`;
+                el.style.color = 'var(--ok)';
+            } catch(e) {
+                el.textContent = '✓ 동의함';
+                el.style.color = 'var(--ok)';
+            }
+        } else {
+            el.textContent = '⚠ 동의 미확인';
+            el.style.color = '#c33';
+        }
+    }
+
+    // ==================== V5.4: 라이선스 시스템 ====================
+    // Pure JS SHA-256 — file:// 호환 (Web Crypto 미사용)
+    function sha256Hex(str) {
+        function rotr(n, x) { return (x >>> n) | (x << (32 - n)); }
+        const K = [
+            0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+            0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+            0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+            0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+            0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+            0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+            0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+            0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+        ];
+        let H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+        // UTF-8 인코딩
+        const utf8 = unescape(encodeURIComponent(str));
+        const bytes = [];
+        for (let i = 0; i < utf8.length; i++) bytes.push(utf8.charCodeAt(i));
+        const bitLen = bytes.length * 8;
+        bytes.push(0x80);
+        while (bytes.length % 64 !== 56) bytes.push(0);
+        // 길이를 64bit 빅엔디안으로 추가
+        for (let i = 7; i >= 0; i--) bytes.push((bitLen / Math.pow(2, i*8)) & 0xff);
+        // 블록 처리
+        for (let bi = 0; bi < bytes.length; bi += 64) {
+            const W = new Array(64);
+            for (let i = 0; i < 16; i++) {
+                W[i] = (bytes[bi + i*4] << 24) | (bytes[bi + i*4 + 1] << 16) | (bytes[bi + i*4 + 2] << 8) | bytes[bi + i*4 + 3];
+                W[i] >>>= 0;
+            }
+            for (let i = 16; i < 64; i++) {
+                const s0 = rotr(7, W[i-15]) ^ rotr(18, W[i-15]) ^ (W[i-15] >>> 3);
+                const s1 = rotr(17, W[i-2]) ^ rotr(19, W[i-2]) ^ (W[i-2] >>> 10);
+                W[i] = (W[i-16] + s0 + W[i-7] + s1) >>> 0;
+            }
+            let [a,b,c,d,e,f,g,h] = H;
+            for (let i = 0; i < 64; i++) {
+                const S1 = rotr(6,e) ^ rotr(11,e) ^ rotr(25,e);
+                const ch = (e & f) ^ (~e & g);
+                const t1 = (h + S1 + ch + K[i] + W[i]) >>> 0;
+                const S0 = rotr(2,a) ^ rotr(13,a) ^ rotr(22,a);
+                const mj = (a & b) ^ (a & c) ^ (b & c);
+                const t2 = (S0 + mj) >>> 0;
+                h = g; g = f; f = e;
+                e = (d + t1) >>> 0;
+                d = c; c = b; b = a;
+                a = (t1 + t2) >>> 0;
+            }
+            H = [(H[0]+a)>>>0,(H[1]+b)>>>0,(H[2]+c)>>>0,(H[3]+d)>>>0,(H[4]+e)>>>0,(H[5]+f)>>>0,(H[6]+g)>>>0,(H[7]+h)>>>0];
+        }
+        return H.map(v => v.toString(16).padStart(8, '0')).join('');
+    }
+
+    // 키 생성 (판매자가 사용 — 검증과 같은 알고리즘이어야 함)
+    function makeLicenseKey(email, name, expiryYYMMDD) {
+        const norm = (email||'').trim().toLowerCase() + '|' + (name||'').trim() + '|' + expiryYYMMDD + '|' + getLicenseSecret();
+        const hash = sha256Hex(norm).substring(0, 16).toUpperCase();
+        const parts = hash.match(/.{4}/g).join('-');
+        return `PSW-${expiryYYMMDD}-${parts}`;
+    }
+
+    // 키 검증
+    function verifyLicenseKey(email, name, key) {
+        if (!email || !name || !key) return { valid: false, reason: '이메일·이름·키를 모두 입력해 주십시오.' };
+        const cleaned = key.trim().toUpperCase().replace(/\s/g, '');
+        const m = cleaned.match(/^PSW-(\d{6})-([0-9A-F]{4})-([0-9A-F]{4})-([0-9A-F]{4})-([0-9A-F]{4})$/);
+        if (!m) return { valid: false, reason: '키 형식이 올바르지 않습니다. (예: PSW-YYMMDD-XXXX-XXXX-XXXX-XXXX)' };
+        const expiryYYMMDD = m[1];
+        const userPart = m[2] + m[3] + m[4] + m[5];
+
+        const yy = parseInt(expiryYYMMDD.substring(0,2), 10);
+        const mm = parseInt(expiryYYMMDD.substring(2,4), 10);
+        const dd = parseInt(expiryYYMMDD.substring(4,6), 10);
+        if (mm < 1 || mm > 12 || dd < 1 || dd > 31) return { valid: false, reason: '키의 만료일 형식이 잘못되었습니다.' };
+        const expiryDate = new Date(2000 + yy, mm - 1, dd, 23, 59, 59);
+        const today = new Date();
+        if (expiryDate < today) return { valid: false, reason: `이 키는 ${expiryDate.toLocaleDateString('ko-KR')}에 만료되었습니다.`, expiry: expiryDate };
+
+        // 해시 재계산
+        const norm = email.trim().toLowerCase() + '|' + name.trim() + '|' + expiryYYMMDD + '|' + getLicenseSecret();
+        const expected = sha256Hex(norm).substring(0, 16).toUpperCase();
+        if (expected !== userPart) return { valid: false, reason: '이메일·이름이 키와 일치하지 않습니다. 구매 시 입력하신 정보를 확인해 주십시오.' };
+        return { valid: true, expiry: expiryDate };
+    }
+
+    function getLicenseRecord() {
+        try {
+            const raw = localStorage.getItem(LS_LICENSE);
+            if (!raw) return null;
+            return JSON.parse(raw);
+        } catch(e) { return null; }
+    }
+
+    function getLicenseStatus() {
+        const rec = getLicenseRecord();
+        if (!rec) return { status: 'none' };
+        const today = new Date();
+        const expiry = new Date(rec.expiry);
+        if (expiry < today) return { status: 'expired', expiry, rec };
+        const daysLeft = Math.ceil((expiry - today) / 86400000);
+        if (rec.trial) return { status: 'trial', expiry, daysLeft, rec };
+        if (daysLeft <= 30) return { status: 'expiring', expiry, daysLeft, rec };
+        return { status: 'active', expiry, daysLeft, rec };
+    }
+
+    function openLicenseModal(forceShow) {
+        const status = getLicenseStatus();
+        if (!forceShow && status.status === 'active') return;
+        if (!forceShow && status.status === 'trial' && status.daysLeft > 0) return;
+        const modal = document.getElementById('licenseModal');
+        // 기존 라이선스가 있으면 미리 채움
+        const rec = getLicenseRecord();
+        if (rec && !rec.trial) {
+            document.getElementById('licEmail').value = rec.email || '';
+            document.getElementById('licName').value = rec.name || '';
+            document.getElementById('licKey').value = rec.key || '';
+        }
+        document.getElementById('licResult').className = 'license-result';
+        document.getElementById('licResult').textContent = '';
+        modal.classList.add('show');
+    }
+
+    function activateLicense() {
+        const email = document.getElementById('licEmail').value.trim();
+        const name = document.getElementById('licName').value.trim();
+        const key = document.getElementById('licKey').value.trim();
+        const result = document.getElementById('licResult');
+        const btn = document.getElementById('btnActivateLic');
+
+        btn.disabled = true;
+        btn.textContent = '검증 중...';
+
+        // setTimeout으로 UI 갱신 보장
+        setTimeout(() => {
+            const v = verifyLicenseKey(email, name, key);
+            btn.disabled = false;
+            btn.textContent = '활성화하기';
+            if (!v.valid) {
+                result.className = 'license-result error';
+                result.innerHTML = '❌ ' + v.reason;
+                return;
+            }
+            // 저장
+            const record = {
+                email, name, key: key.toUpperCase(),
+                expiry: v.expiry.toISOString(),
+                activatedAt: new Date().toISOString(),
+                trial: false
+            };
+            try {
+                localStorage.setItem(LS_LICENSE, JSON.stringify(record));
+            } catch(e) {
+                result.className = 'license-result error';
+                result.innerHTML = '❌ 저장 실패: ' + e.message;
+                return;
+            }
+            result.className = 'license-result success';
+            result.innerHTML = `✅ 활성화 완료! 만료일: <b>${v.expiry.toLocaleDateString('ko-KR')}</b>`;
+            updateLicenseStatus();
+            // 1.5초 후 닫기
+            setTimeout(() => {
+                document.getElementById('licenseModal').classList.remove('show');
+            }, 1500);
+        }, 100);
+    }
+
+    function startTrial() {
+        const existing = getLicenseRecord();
+        if (existing && existing.trial) {
+            // 이미 체험판 사용 중 — 기존 만료일 유지
+            const status = getLicenseStatus();
+            if (status.status === 'expired') {
+                alert('체험판 7일이 만료되었습니다. 정식 라이선스를 입력해 주십시오.');
+                return;
+            }
+            document.getElementById('licenseModal').classList.remove('show');
+            return;
+        }
+        const ok = confirm('체험판은 7일 후 자동 만료됩니다. 시작하시겠습니까?');
+        if (!ok) return;
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + 7);
+        const record = {
+            email: '',
+            name: '체험판 사용자',
+            key: 'TRIAL',
+            expiry: expiry.toISOString(),
+            activatedAt: new Date().toISOString(),
+            trial: true
+        };
+        localStorage.setItem(LS_LICENSE, JSON.stringify(record));
+        document.getElementById('licenseModal').classList.remove('show');
+        updateLicenseStatus();
+    }
+
+    function updateLicenseStatus() {
+        const el = document.getElementById('licenseStatus');
+        if (!el) return;
+        const s = getLicenseStatus();
+        if (s.status === 'none') {
+            el.textContent = '⚠ 미활성';
+            el.style.color = '#c33';
+        } else if (s.status === 'expired') {
+            el.textContent = `❌ 만료 (${s.expiry.toLocaleDateString('ko-KR')})`;
+            el.style.color = '#c33';
+        } else if (s.status === 'trial') {
+            el.textContent = `🎟 체험판 (D-${s.daysLeft})`;
+            el.style.color = '#8a6a00';
+        } else if (s.status === 'expiring') {
+            el.textContent = `⚠ 만료 임박 (D-${s.daysLeft})`;
+            el.style.color = '#8a6a00';
+        } else {
+            el.textContent = `✓ 정품 (~${s.expiry.toLocaleDateString('ko-KR')})`;
+            el.style.color = 'var(--ok)';
+        }
+    }
+
+    function enforceLicense() {
+        const s = getLicenseStatus();
+        if (s.status === 'expired') {
+            // 잠금 화면 표시
+            const lock = document.getElementById('licenseLock');
+            const msg = document.getElementById('lockMessage');
+            if (s.rec && s.rec.trial) {
+                msg.textContent = '체험판 7일이 만료되었습니다. 정식 라이선스를 등록해 주십시오.';
+            } else {
+                msg.textContent = `라이선스가 ${s.expiry.toLocaleDateString('ko-KR')}에 만료되었습니다.`;
+            }
+            lock.classList.add('show');
+            return false;
+        }
+        return true;
+    }
+
+    // 개발자 콘솔용 키 생성 헬퍼 (판매자가 직접 사용)
+    window.__makeKey = function(email, name, expiryYYMMDD) {
+        if (!expiryYYMMDD || !/^\d{6}$/.test(expiryYYMMDD)) {
+            console.error('expiryYYMMDD는 YYMMDD 6자리 (예: 270601 = 2027년 6월 1일)');
+            return;
+        }
+        const key = makeLicenseKey(email, name, expiryYYMMDD);
+        console.log(`키 발급: ${email} / ${name} / 만료 20${expiryYYMMDD.slice(0,2)}-${expiryYYMMDD.slice(2,4)}-${expiryYYMMDD.slice(4,6)}`);
+        console.log(`키: ${key}`);
+        return key;
+    };
 
     // ==================== V5.3: 사용자 템플릿 관리 ====================
     function getUserData() {
@@ -1154,7 +3292,7 @@
         return { customs: {}, additions: {} };
     }
     function saveUserData(data) {
-        localStorage.setItem(LS_USER_TPL, JSON.stringify(data));
+        safeSetItem(LS_USER_TPL, JSON.stringify(data));
     }
 
     function getEffectiveTemplates(category) {
@@ -1492,7 +3630,11 @@
         const varMap = buildVarMap();
         const result = applyVariables(tpl.text, varMap);
         let finalMsg = processJosa(result.text);  // V5.2: 한글 조사 자동 처리
-        if (signature.trim() !== '') finalMsg += '\n\n' + signature;
+        // V5.4 P1-7: 서명도 변수 치환·조사 처리 (다중 서명 프리셋이 변수 기반이므로 필수)
+        if (signature.trim() !== '') {
+            const sigResult = applyVariables(signature.trim(), varMap);
+            finalMsg += '\n\n' + processJosa(sigResult.text);
+        }
         resultBox.value = finalMsg;
 
         // 결과 안내 표시
