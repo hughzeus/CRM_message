@@ -8,11 +8,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="판매왕문자" id="metaAppleTitle">
     <meta name="application-name" content="판매왕문자" id="metaAppName">
-    <meta name="theme-color" content="#003499" id="metaThemeColor">
+    <meta name="theme-color" content="#17305C" id="metaThemeColor">
     <!-- V5.4 P1-8 PWA: 별도 manifest.json (HTTPS 호스팅 시) + 인라인 fallback (file:// 호환은 JS에서 동적 주입) -->
     <link rel="manifest" id="appManifest" href="manifest.json">
-    <link rel="apple-touch-icon" id="appleTouchIcon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><rect width='256' height='256' rx='48' fill='%23003499'/><text x='50%25' y='58%25' font-size='150' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='800'>판</text></svg>">
-    <link rel="icon" id="favIcon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><rect width='256' height='256' rx='48' fill='%23003499'/><text x='50%25' y='58%25' font-size='150' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='800'>판</text></svg>" type="image/svg+xml">
+    <link rel="apple-touch-icon" id="appleTouchIcon" sizes="512x512" href="icon-512.png">
+    <link rel="icon" id="favIcon" href="icon-192.png" type="image/png">
     <title>자동차 판매왕 문자 생성기 v5.4 — 화이트라벨</title>
 
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
@@ -1570,7 +1570,8 @@
         const colorEnc = color.replace('#','%23');
         const name = (profile && (profile.company || profile.name)) || '판매왕문자';
         const initial = (name.trim().charAt(0)) || '판';
-        const iconSvg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><rect width='256' height='256' rx='48' fill='${colorEnc}'/><text x='50%25' y='58%25' font-size='150' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='800'>${initial}</text></svg>`;
+        // 고정 브랜드 아이콘(왕관+말풍선, 로열블루) — 사용자 프로필 색·이니셜과 무관하게 3제품 통일
+        const iconSvg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><rect width='256' height='256' rx='60' fill='%2317305C'/><g fill='%23D2A44E' transform='translate(43,57) scale(0.95)'><path d='M10,78 L10,30 L52,58 L90,10 L128,58 L170,30 L170,78 Z'/><rect x='6' y='78' width='168' height='20' rx='5'/><circle cx='10' cy='26' r='10'/><circle cx='90' cy='8' r='11'/><circle cx='170' cy='26' r='10'/></g><text x='128' y='213' text-anchor='middle' font-family='-apple-system,sans-serif' font-weight='800' font-size='50' fill='%23D2A44E'>문자</text></svg>`;
         const manifest = {
             name: name + ' · 판매왕문자',
             short_name: name.slice(0, 12),
@@ -1579,8 +1580,8 @@
             scope: './',
             display: 'standalone',
             orientation: 'portrait',
-            background_color: color,
-            theme_color: color,
+            background_color: '#17305C',
+            theme_color: '#17305C',
             lang: 'ko-KR',
             icons: [{ src: iconSvg, sizes: '192x192 256x256 512x512', type: 'image/svg+xml', purpose: 'any maskable' }]
         };
