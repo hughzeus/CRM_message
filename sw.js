@@ -1,9 +1,10 @@
 // 판매왕문자 V5.4 Service Worker
 // Cache-First 전략 — 한 번 캐시한 자산은 오프라인에서도 사용 가능
 
-const CACHE_VERSION = 'salesking-v5.4-2026-07-18-icon2';
+const CACHE_VERSION = 'salesking-v5.4-2026-07-18-idx';
 const CORE_ASSETS = [
-    './판매왕문자_V5.4.html',
+    './',
+    './index.html',
     './manifest.json',
     './icon-192.png',
     './icon-512.png',
@@ -66,7 +67,7 @@ self.addEventListener('fetch', (event) => {
             }).catch(err => {
                 // 오프라인 + 캐시 미보유 — HTML 요청이면 메인 HTML로 fallback
                 if (event.request.destination === 'document') {
-                    return caches.match('./판매왕문자_V5.4.html');
+                    return caches.match('./index.html') || caches.match('./');
                 }
                 throw err;
             });

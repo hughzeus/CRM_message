@@ -2,7 +2,7 @@
   "name": "판매왕문자 V5.4",
   "short_name": "판매왕문자",
   "description": "자동차 영업 문자 생성기 — CRM 연동·변수 자동 치환·한글 조사 자동 처리",
-  "start_url": "./판매왕문자_V5.4.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
